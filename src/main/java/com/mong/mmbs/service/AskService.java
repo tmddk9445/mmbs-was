@@ -10,12 +10,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mong.mmbs.dto.ResponseDto;
-import com.mong.mmbs.dto.AskDeleteDto;
-import com.mong.mmbs.dto.AskDto;
-import com.mong.mmbs.dto.AskUpdateDto;
-import com.mong.mmbs.dto.AskSearchDto;
+import com.mong.mmbs.dto.request.ask.AskPatchRequestDto;
+import com.mong.mmbs.dto.request.ask.AskPostRequestDto;
+import com.mong.mmbs.dto.response.ResponseDto;
+import com.mong.mmbs.dto.response.ask.AskGetListResponseDto;
+import com.mong.mmbs.dto.response.ask.AskGetResponseDto;
+import com.mong.mmbs.dto.response.ask.AskPatchResponseDto;
+import com.mong.mmbs.dto.response.ask.AskPostResponseDto;
 import com.mong.mmbs.repository.AskRepository;
+import com.mong.mmbs.util.ResponseMessage;
 import com.mong.mmbs.entity.AskEntity;
 
 @Service
@@ -23,92 +26,62 @@ public class AskService {
 
   @Autowired AskRepository askRepository;
 
-  // 로그인 된 회원의 아이디를 askWriter에 입력
-  public ResponseDto<?> getAskList(String userId) {
+  // 문의 작성
+  public ResponseDto<AskPostResponseDto> post(AskPostRequestDto dto){
+
+		AskEntity askEntity = new AskEntity(dto);
+
+		try {
+
+			askRepository.save(askEntity);
+
+		} catch (Exception exception) {
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+		}
+
+    AskPostResponseDto data = new AskPostResponseDto(askEntity);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+
+	}
+
+  // 문의 리스트 출력
+  public ResponseDto<AskGetListResponseDto> getList(String userId) {
 
 		List<AskEntity> askList = new ArrayList<AskEntity>();
 
 		try {
+
 			askList = askRepository.findByAskWriter(userId);
-			if (askList == null) return ResponseDto.setFailed("Does not Exist Order");
+
 		} catch(Exception exception){
-			return ResponseDto.setFailed("Database Error");
-		}
-		return ResponseDto.setSuccess("Success", askList);
-	}
-
-	public ResponseDto<?> askWrite(AskDto dto){
-
-		AskEntity askEntity = new AskEntity(dto);
-		try {
-			System.out.println(askEntity.toString());
-			askRepository.save(askEntity);
-		} catch (Exception exception) {
-			return ResponseDto.setFailed("Failed");
-		}
-		return ResponseDto.setSuccess("Ask Write Success", askEntity);
-
-	}
-
-	public ResponseDto<?> askUpdateList(int askId){
-		
-		AskEntity ask = null;
-
-		try {
-			ask = askRepository.findByAskId(askId);
-		} catch (Exception exception) {
-			return ResponseDto.setFailed("Database Error");
-		}
-		return ResponseDto.setSuccess("성공", ask);
-	}
-
-	public ResponseDto<?> askUpdate(AskUpdateDto dto) {
-		AskEntity ask = null;
-		int askId = dto.getAskId();
-
-		try {
-			ask = askRepository.findByAskId(askId);
-			if (ask == null) ResponseDto.setFailed("Does Not Exist User");
-		} catch (Exception exception) {
-			ResponseDto.setFailed("Failed");
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-		ask.setAskUpdate(dto);
+    AskGetListResponseDto data = new AskGetListResponseDto(askList);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
-		try {
-			askRepository.save(ask);
-		} catch (Exception exception) {
-			ResponseDto.setFailed("Failed");
-		}
-		return ResponseDto.setSuccess("Success", ask);
 	}
 	
-	public ResponseDto<?> askDelete (AskDeleteDto dto, String userId){
+  // 수정할 문의 출력
+	public ResponseDto<AskGetResponseDto> get(int askId){
 		
-		int askId =dto.getAskId();
-		try {
-			AskEntity askEntity = askRepository.findByAskId(askId);
-			askRepository.delete(askEntity);
-		} catch (Exception exception) {
+		AskEntity ask = null;
 
-			ResponseDto.setFailed("Failed");
-		}
-		
-		List<AskEntity> list = new ArrayList<AskEntity>();
 		try {
-			list = askRepository.findByAskWriter(userId);
-		} catch (Exception exception) {
-			ResponseDto.setFailed("Failed123");
 
+			ask = askRepository.findByAskId(askId);
+
+		} catch (Exception exception) {
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
-		return ResponseDto.setSuccess("Success", list);
+
+    AskGetResponseDto data = new AskGetResponseDto(ask);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+
 	}
 
-	public ResponseDto<?> askSearch (AskSearchDto dto, String userId) {
-
-		String askStatus = dto.getAskStatus();
-		int months = dto.getAskDatetime();
-		String askSort = dto.getAskSort();
+  // 문의 검색
+  public ResponseDto<?> find (String userId, String askStatus, int months, String askSort) {
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = Date.from(Instant.now().minus(months * 30, ChronoUnit.DAYS));
@@ -116,16 +89,60 @@ public class AskService {
 
 		List<AskEntity> askList = new ArrayList<AskEntity>();
 
-		System.out.println(askDateTime);
-
 		try {
+
 			askList = askRepository.findByAskWriterAndAskDatetimeGreaterThanEqualAndAskSortContainsAndAskStatusContainsOrderByAskDatetimeDesc(userId, askDateTime, askSort, askStatus);
-			if (askList == null) return ResponseDto.setFailed("Does not Exist Order");
+
 		} catch(Exception exception){
 			exception.printStackTrace();
-			return ResponseDto.setFailed("Database Error");
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
+
 		return ResponseDto.setSuccess("Success", askList);
 	
 	}
+
+  // 문의 수정
+	public ResponseDto<AskPatchResponseDto> patch(AskPatchRequestDto dto) {
+
+		AskEntity ask = null;
+		int askId = dto.getAskId();
+
+		try {
+
+			ask = askRepository.findByAskId(askId);
+			if (ask == null) ResponseDto.setFailed("Does Not Exist User");
+
+      ask.patch(dto);
+      askRepository.save(ask);
+
+		} catch (Exception exception) {
+			ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+		}
+
+    AskPatchResponseDto data = new AskPatchResponseDto(ask);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+		
+	}
+	
+	public ResponseDto<?> delete(String userId, int askId){
+
+    List<AskEntity> list = new ArrayList<AskEntity>();
+
+		try {
+
+			AskEntity askEntity = askRepository.findByAskId(askId);
+			askRepository.delete(askEntity);
+
+      list = askRepository.findByAskWriter(userId);
+
+		} catch (Exception exception) {
+			ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+
+		}
+
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, list);
+
+	}
+
 }

@@ -10,7 +10,7 @@ import com.mong.mmbs.dto.AmountUpdateDto;
 import com.mong.mmbs.dto.DeleteAllFromCartDto;
 import com.mong.mmbs.dto.DeleteFromCartDto;
 import com.mong.mmbs.dto.PutInCartDto;
-import com.mong.mmbs.dto.ResponseDto;
+import com.mong.mmbs.dto.response.ResponseDto;
 import com.mong.mmbs.entity.CartEntity;
 import com.mong.mmbs.entity.ProductEntity;
 import com.mong.mmbs.repository.CartRepository;

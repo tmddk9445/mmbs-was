@@ -16,7 +16,6 @@ public interface AskRepository extends JpaRepository<AskEntity, Integer>{
 
   public AskEntity deleteByAskId(int askId);
 
-  // 문의 조회하기
   public List<AskEntity> findByAskWriterAndAskDatetimeGreaterThanEqualAndAskSortContainsAndAskStatusContainsOrderByAskDatetimeDesc(String userId, String askDatetime, String askSort, String askStatus);
 
 }
