@@ -5,78 +5,78 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mong.mmbs.dto.DtlLikepageDto;
+import com.mong.mmbs.dto.SearchDto;
 import com.mong.mmbs.dto.response.ResponseDto;
 import com.mong.mmbs.entity.ProductEntity;
 import com.mong.mmbs.repository.ProductRepository;
 
 @Service
-
 public class ProductService {
-	
-	@Autowired ProductRepository productRepository;
-	
-	//연령
-	public ResponseDto<?> getProductAgeList(String productAgeCategory, String productSubAgeCategory) {
-		
-		List<ProductEntity> productAgeList = null;
-	
-		if(productSubAgeCategory.equals("0"))
-			try {
-			productAgeList = productRepository.findByProductAge(productAgeCategory);
-			} catch (Exception exception) {
-				return ResponseDto.setFailed("error");
-			}
-		else 
-			try {
-			productAgeList = productRepository.findByProductAgeAndProductSubAge(productAgeCategory, productSubAgeCategory);
-			}catch (Exception exception) {
-				return ResponseDto.setFailed("error");
-			}
-		return ResponseDto.setSuccess("Success", productAgeList);
-	}
-		
-		// 장르별		
-		
-	public ResponseDto<?> getProductGenreList(String productGenreCategory, String productSubGenreCategory) {
-		System.out.println(productGenreCategory);
-		
-		List<ProductEntity> productGenreList = null; 
-		
-		if(productSubGenreCategory.equals("0"))
-			try {
-			productGenreList = productRepository.findByProductGenre(productGenreCategory);
-			}catch (Exception exception) {
-				return ResponseDto.setFailed("error");
-			}
-		else 
-			try {
-			productGenreList = productRepository.findByProductGenreAndProductSubGenre(productGenreCategory, productSubGenreCategory);
-			}catch (Exception exception) {
-				return ResponseDto.setFailed("error");
-			}
+    
+    @Autowired ProductRepository productRepository;
 
-			return ResponseDto.setSuccess("Success", productGenreList);
-	}
+    public ResponseDto<?> Bestseller (){
+        List<ProductEntity> ProductBast=null;
+        try {
+            ProductBast= productRepository.findTop10ByOrderByProductLikeDesc();
+        } catch (Exception exception) {
+            return ResponseDto.setFailed("Database Error");
+        }
+        
+        return ResponseDto.setSuccess("성공", ProductBast);
+    }
 
-	public ResponseDto<?> getProduct(int productSeq) {
-		ProductEntity product = null;
+    public ResponseDto<?> MainImage(){
+        List<ProductEntity> BastImage = null;
+        try {
+            BastImage = productRepository.findAll();
+        } catch (Exception exception) {
+            return ResponseDto.setFailed("Database Error");
+        }
+        return ResponseDto.setSuccess("성공", BastImage);
+    }
+
+    public ResponseDto<?>dtlPage(int productSeq){
+		
+		ProductEntity product=null;
+
 		try {
-			product = productRepository.findByProductSeq(productSeq);
+			product=productRepository.findByProductSeq(productSeq);
 		} catch (Exception exception) {
-			return ResponseDto.setFailed("failed");
+			return ResponseDto.setFailed("Database Error");
 		}
-		return ResponseDto.setSuccess("success", product);
+		return ResponseDto.setSuccess("성공", product);
 	}
 
+//	상세페이지 좋아요
+	public ResponseDto<?>dtllikePage(DtlLikepageDto dto ) {
+		int productSeq = dto.getProductSeq();
+		ProductEntity productEntity = null;
+		try {
+			productEntity = productRepository.findByProductSeq(productSeq);
+		} catch (Exception exception) {
+			return ResponseDto.setFailed("Database Error");
+		}
+		productEntity.setProductLike(productEntity.getProductLike() + 1);
 
-	
-//	public ResponseDto<?> getproductLikeList(int productLike) {
-//		List<ProductEntity> productLikeList = null;
-//		if(productLike > productLike) {
-//			productLikeList = productRepository.findByProducLike(productLike);
-//			
-//			}
-//		return ResponseDto.setSuccess("success", productLikeList);	
-//}
-	
+		try {
+			productRepository.save(productEntity);
+		} catch (Exception exception) {
+			return ResponseDto.setFailed("Database Error");
+		}
+		return ResponseDto.setSuccess("성공", null);
+		
+	}
+
+    public ResponseDto<?> search(SearchDto dto) {
+        String productTitle = dto.getProductTitle();
+        List<ProductEntity> postsList =null;
+        try {
+            postsList= productRepository.findByProductTitleContaining(productTitle);
+        } catch (Exception exception) {
+            return ResponseDto.setFailed("Database Error");
+        }
+        return ResponseDto.setSuccess("성공", postsList);
+    }
 }

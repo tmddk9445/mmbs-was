@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.mong.mmbs.entity.ProductEntity;
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, Integer>{
+    
 public ProductEntity findByProductSeq(int productSeq);
 public List<ProductEntity> findByProductAge(String productAgeCategory);
 public List<ProductEntity> findByProductAgeAndProductSubAge(String productAgeCategory, String productSubAgeCategory);

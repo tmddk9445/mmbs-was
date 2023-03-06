@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mong.mmbs.dto.response.ResponseDto;
-import com.mong.mmbs.service.ProductService;
+import com.mong.mmbs.service.ProductListService;
 
 @RestController
 @RequestMapping("/api/book")
 
-public class BookController<BookListServicevice> {
+public class ProductListController<BookListServicevice> {
 	
-	@Autowired ProductService productService;
+	@Autowired ProductListService productService;
 	
 	@GetMapping("/bookList1/{produtAgeCategory}/{productSubAgeCategory}")
 	public ResponseDto<?> getProductAgeList(@PathVariable("produtAgeCategory") String productAgeCategory, @PathVariable("productSubAgeCategory") String productSubAgeCategory) {

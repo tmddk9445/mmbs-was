@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MainController {
 	
 	@GetMapping("")
-	public String hello() {
-		return "Connection Successful";
+	public String Start() {
+		return "Connection Successful Go For it";
 	}
 
 }

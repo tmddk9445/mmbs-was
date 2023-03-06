@@ -15,8 +15,8 @@ public class PaymentController {
 	
 @Autowired UserService userService;
 	
-	@GetMapping("/paymentInfo/{userId}")
-	public ResponseDto<?> getUser(@PathVariable("userId")String userId) {
-		return userService.getUser(userId);
-	}
+	// @GetMapping("/paymentInfo/{userId}")
+	// public ResponseDto<?> getUser(@PathVariable("userId")String userId) {
+	// 	return userService.getUser(userId);
+	// }
 }
