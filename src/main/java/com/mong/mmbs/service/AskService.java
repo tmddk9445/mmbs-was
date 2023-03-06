@@ -14,7 +14,9 @@ import com.mong.mmbs.dto.request.ask.AskPatchRequestDto;
 import com.mong.mmbs.dto.request.ask.AskPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
 import com.mong.mmbs.dto.response.ask.AskGetListResponseDto;
-import com.mong.mmbs.dto.response.ask.AskGetResponseDto;
+import com.mong.mmbs.dto.response.ask.AskDeleteResponseDto;
+import com.mong.mmbs.dto.response.ask.AskGetAskIdResponseDto;
+import com.mong.mmbs.dto.response.ask.AskGetFindResponseDto;
 import com.mong.mmbs.dto.response.ask.AskPatchResponseDto;
 import com.mong.mmbs.dto.response.ask.AskPostResponseDto;
 import com.mong.mmbs.repository.AskRepository;
@@ -36,11 +38,12 @@ public class AskService {
 			askRepository.save(askEntity);
 
 		} catch (Exception exception) {
+      exception.printStackTrace();
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-    AskPostResponseDto data = new AskPostResponseDto(askEntity);
-		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+    AskPostResponseDto data = new AskPostResponseDto();
+	return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
 	}
 
@@ -54,6 +57,7 @@ public class AskService {
 			askList = askRepository.findByAskWriter(userId);
 
 		} catch(Exception exception){
+      exception.printStackTrace();
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
@@ -63,7 +67,7 @@ public class AskService {
 	}
 	
   // 수정할 문의 출력
-	public ResponseDto<AskGetResponseDto> get(int askId){
+	public ResponseDto<AskGetAskIdResponseDto> get(int askId){
 		
 		AskEntity ask = null;
 
@@ -72,16 +76,17 @@ public class AskService {
 			ask = askRepository.findByAskId(askId);
 
 		} catch (Exception exception) {
+      exception.printStackTrace();
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-    AskGetResponseDto data = new AskGetResponseDto(ask);
+    AskGetAskIdResponseDto data = new AskGetAskIdResponseDto(ask);
 		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
 	}
 
   // 문의 검색
-  public ResponseDto<?> find (String userId, String askStatus, int months, String askSort) {
+  public ResponseDto<AskGetFindResponseDto> find (String userId, String askStatus, int months, String askSort) {
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = Date.from(Instant.now().minus(months * 30, ChronoUnit.DAYS));
@@ -98,7 +103,8 @@ public class AskService {
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-		return ResponseDto.setSuccess("Success", askList);
+    AskGetFindResponseDto data = new AskGetFindResponseDto(askList);
+		return ResponseDto.setSuccess("Success", data);
 	
 	}
 
@@ -117,15 +123,17 @@ public class AskService {
       askRepository.save(ask);
 
 		} catch (Exception exception) {
+      exception.printStackTrace();
 			ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-    AskPatchResponseDto data = new AskPatchResponseDto(ask);
+    AskPatchResponseDto data = new AskPatchResponseDto();
 		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 		
 	}
 	
-	public ResponseDto<?> delete(String userId, int askId){
+  // 문의 삭제
+	public ResponseDto<AskDeleteResponseDto> delete(String userId, int askId){
 
     List<AskEntity> list = new ArrayList<AskEntity>();
 
@@ -137,11 +145,12 @@ public class AskService {
       list = askRepository.findByAskWriter(userId);
 
 		} catch (Exception exception) {
+      exception.printStackTrace();
 			ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
-
 		}
 
-		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, list);
+    AskDeleteResponseDto data = new AskDeleteResponseDto(list);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
 	}
 

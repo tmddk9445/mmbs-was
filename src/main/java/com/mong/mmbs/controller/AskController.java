@@ -15,50 +15,53 @@ import com.mong.mmbs.dto.request.ask.AskPatchRequestDto;
 import com.mong.mmbs.dto.request.ask.AskPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
 import com.mong.mmbs.dto.response.ask.AskGetListResponseDto;
-import com.mong.mmbs.dto.response.ask.AskGetResponseDto;
+import com.mong.mmbs.dto.response.ask.AskDeleteResponseDto;
+import com.mong.mmbs.dto.response.ask.AskGetAskIdResponseDto;
+import com.mong.mmbs.dto.response.ask.AskGetFindResponseDto;
 import com.mong.mmbs.dto.response.ask.AskPatchResponseDto;
 import com.mong.mmbs.dto.response.ask.AskPostResponseDto;
 import com.mong.mmbs.service.AskService;
+import com.mong.mmbs.util.EndPoint;
 
 @RestController
-@RequestMapping("/api/ask")
+@RequestMapping(EndPoint.ASK)
 public class AskController {
 
   @Autowired AskService askService;
 
-  @PostMapping("/")
+  @PostMapping(EndPoint.ASK_POST_NULL)
   public ResponseDto<AskPostResponseDto> post(@RequestBody AskPostRequestDto requestBody) {
     ResponseDto<AskPostResponseDto> result = askService.post(requestBody);
     return result;
   }
   
-  @GetMapping("/list")
+  @GetMapping(EndPoint.ASK_GET_LIST)
   public ResponseDto<AskGetListResponseDto> getList(@AuthenticationPrincipal String userId) { 
     ResponseDto<AskGetListResponseDto> result = askService.getList(userId);
 		return result;
 	}
 
-  @GetMapping("/{askId}")
-  public ResponseDto<AskGetResponseDto> get(@PathVariable("askId") int askId) {
-    ResponseDto<AskGetResponseDto> result = askService.get(askId);
+  @GetMapping(EndPoint.ASK_GET_ASKID)
+  public ResponseDto<AskGetAskIdResponseDto> get(@PathVariable("askId") int askId) {
+    ResponseDto<AskGetAskIdResponseDto> result = askService.get(askId);
     return result;
   }
 
-  @GetMapping("/{askStatus}/{askDatetime}/{askSort}")
-  public ResponseDto<?> find(@AuthenticationPrincipal String userId, @PathVariable("askStatus") String askStatus, @PathVariable("months") int months, @PathVariable("askSort") String askSort) {
-      ResponseDto<?> result = askService.find(userId, askStatus, months, askSort);
+  @GetMapping(EndPoint.ASK_GET_FIND)
+  public ResponseDto<AskGetFindResponseDto> find(@AuthenticationPrincipal String userId, @PathVariable("askStatus") String askStatus, @PathVariable("months") int months, @PathVariable("askSort") String askSort) {
+      ResponseDto<AskGetFindResponseDto> result = askService.find(userId, askStatus, months, askSort);
       return result;
   }
   
-  @PatchMapping("/")
+  @PatchMapping(EndPoint.ASK_PATCH_NULL)
   public ResponseDto<AskPatchResponseDto> patch(@RequestBody AskPatchRequestDto requestBody) {
     ResponseDto<AskPatchResponseDto> result = askService.patch(requestBody);
     return result;
   }
 
-  @DeleteMapping("/{askId}")
-  public ResponseDto<?> delete(@AuthenticationPrincipal String userId, @PathVariable("askId") int askId){
-    ResponseDto<?> result = askService.delete(userId, askId);
+  @DeleteMapping(EndPoint.ASK_DELETE_ASKID)
+  public ResponseDto<AskDeleteResponseDto> delete(@AuthenticationPrincipal String userId, @PathVariable("askId") int askId){
+    ResponseDto<AskDeleteResponseDto> result = askService.delete(userId, askId);
     return result;
   }
 

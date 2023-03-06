@@ -7,8 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.mong.mmbs.dto.SignUpDto;
 import com.mong.mmbs.dto.UserUpdateDto;
+import com.mong.mmbs.dto.request.auth.SignUpRequestDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -42,7 +42,7 @@ public class UserEntity {
 //	탈퇴 날짜
 	private String userWithdraw;
 	
-	public UserEntity(SignUpDto dto) {
+	public UserEntity(SignUpRequestDto dto) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
 		this.userId = dto.getUserId();

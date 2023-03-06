@@ -1,5 +1,7 @@
 package com.mong.mmbs.dto.response.ask;
 
+import java.util.List;
+
 import com.mong.mmbs.entity.AskEntity;
 
 import lombok.AllArgsConstructor;
@@ -9,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AskGetResponseDto {
-    AskEntity ask;
+public class AskDeleteResponseDto {
+    List<AskEntity> askList;
 }

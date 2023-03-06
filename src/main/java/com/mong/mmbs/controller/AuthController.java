@@ -14,8 +14,9 @@ import com.mong.mmbs.dto.MailDto;
 import com.mong.mmbs.dto.ResetPasswordDto;
 import com.mong.mmbs.dto.SignInDto;
 import com.mong.mmbs.dto.SignInResponseDto;
-import com.mong.mmbs.dto.SignUpDto;
+import com.mong.mmbs.dto.request.auth.SignUpRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
+import com.mong.mmbs.dto.response.auth.SignUpPostResponseDto;
 import com.mong.mmbs.service.AuthService;
 import com.mong.mmbs.service.MailService;
 import com.mong.mmbs.service.MemberService;
@@ -34,25 +35,29 @@ public class AuthController {
 	@Autowired MailService mailService;
 	
 	@PostMapping("/signUp")
-	public ResponseDto<?> signUp(@RequestBody SignUpDto requestBody) {
-		ResponseDto<?> result = authService.signUp(requestBody);
+	public ResponseDto<SignUpPostResponseDto> signUp(@RequestBody SignUpRequestDto requestBody) {
+		ResponseDto<SignUpPostResponseDto> result = authService.signUp(requestBody);
 		return result;
 	}
+
 	@PostMapping("/findId")
 	public ResponseDto<?> findId(@RequestBody FindIdDto requestBody){
 		ResponseDto<?> result = authService.findId(requestBody);
 		return result;
 	}
+
 	@PostMapping("/findPassword")
 	public ResponseDto<?> findPassword(@RequestBody FindPasswordDto requestBody){
 		ResponseDto<?> result = authService.findPassword(requestBody);
 		return result;
 	}
+
 	@PostMapping("/resetPassword")
 	public ResponseDto<?> resetPassword(@RequestBody ResetPasswordDto requestBody){
 		ResponseDto<?> result = authService.resetPassword(requestBody);
 		return result;
 	}
+
 	@PostMapping("/signIn")
 	public ResponseDto<SignInResponseDto> signIn(@RequestBody SignInDto requestBody) {
 		ResponseDto<SignInResponseDto> result = authService.signIn(requestBody);
@@ -63,8 +68,8 @@ public class AuthController {
     @GetMapping("/checkEmail/{userEmail}")
     public boolean checkEmail(@PathVariable("userEmail") String userEmail){
 
-    	log.info("checkEmail 진입");
-    	System.out.println(userEmail);
+      log.info("checkEmail 진입");
+      System.out.println(userEmail);
         return memberService.checkEmail(userEmail);
     }
     
@@ -72,8 +77,8 @@ public class AuthController {
     @GetMapping("/sendPwd/{userEmail}")
     public ResponseDto<?> sendPwdEmail(@PathVariable("userEmail") String userEmail) {
 
-    	log.info("sendPwdEmail 진입");
-    	log.info("이메일 : "+ userEmail);
+      log.info("sendPwdEmail 진입");
+      log.info("이메일 : "+ userEmail);
 
         /** 임시 비밀번호 생성 **/
         String tmpPassword = memberService.getTmpPassword();

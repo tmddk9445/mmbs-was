@@ -1,4 +1,4 @@
-package com.mong.mmbs.dto;
+package com.mong.mmbs.dto.request.auth;
 
 import javax.validation.constraints.NotBlank;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignUpDto {
+public class SignUpRequestDto {
 	@NotBlank
 	private String userId;
 	@NotBlank
