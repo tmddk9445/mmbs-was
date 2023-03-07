@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mong.mmbs.common.constant.ResponseMessage;
 import com.mong.mmbs.dto.request.cart.CartAmountPatchRequestDto;
 import com.mong.mmbs.dto.request.cart.CartPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
@@ -41,12 +42,12 @@ public class CartService {
 		try {
 
 			productEntity = productRepository.findByProductSeq(cartProductId);
-			if (productEntity == null) return ResponseDto.setFailed("Does Not Exist Product");
+			if (productEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_PRODUCT);
 
 			cartEntity = cartRepository.findByCartUserIdAndCartProductId(cartUserId, cartProductId);
 
 		} catch (Exception exception) {
-			return ResponseDto.setFailed("데이터베이스 오류");
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
 		if (cartEntity == null) {
@@ -56,7 +57,7 @@ public class CartService {
 				cartRepository.save(cartEntity);
 
 			} catch (Exception exception) {
-				return ResponseDto.setFailed("error");
+				return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 			}
 
 		} else {
@@ -67,13 +68,13 @@ public class CartService {
 				cartRepository.save(cartEntity);
 
 			} catch (Exception exception) {
-				return ResponseDto.setFailed("실패");
+				return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 			}
 
 		}
 
 		data = new CartPostResponseDto(cartEntity, productEntity);
-		return ResponseDto.setSuccess("성공", data);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
 	}
 
@@ -86,15 +87,15 @@ public class CartService {
 		try {
 
 			cartList = cartRepository.findByCartUserId(userId);
-			if (cartList == null) return ResponseDto.setFailed("장바구니에 담긴 상품이 없습니다.");
+			if (cartList == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_CARTLIST);
 			
 			data = new CartGetResponseDto(cartList);
 
 		} catch (Exception exception) {
-			return ResponseDto.setFailed("실패");
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 		
-		return ResponseDto.setSuccess("성공", data);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
 	}
 
@@ -112,10 +113,10 @@ public class CartService {
 			data = new CartAmountPatchResponseDto();
 
 		} catch (Exception exception) {
-			return ResponseDto.setFailed("실패");
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 		
-		return ResponseDto.setSuccess("장바구니에서 수정되었습니다.", data);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 	}
 
 	public ResponseDto<CartDeleteResponseDto> delete(String userId, int cartId) {
@@ -128,17 +129,17 @@ public class CartService {
 		try {
 
 			cartEntity = cartRepository.findByCartId(cartId);
-			if (cartEntity == null) return ResponseDto.setFailed("Does not Exist Cart");
+			if (cartEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_CART);
 
 			cartList = cartRepository.findByCartUserId(userId);
 
       data = new CartDeleteResponseDto(cartList);
 
 		} catch (Exception exception) {
-			return ResponseDto.setFailed("Database Error");
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 		
-		return ResponseDto.setSuccess("장바구니에서 삭제되었습니다.", data);	
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);	
 		
 	}
 
@@ -151,17 +152,17 @@ public class CartService {
 		try {
 
 			cartEntity = cartRepository.findByCartUserId(cartUserId);
-			if (cartEntity != null) return ResponseDto.setFailed("Does not Exist Cart");
+			if (cartEntity != null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_CART);
 
 			cartRepository.deleteAll(cartEntity);
 
-      data = new CartDeleteAllResponseDto(cartEntity);
+			data = new CartDeleteAllResponseDto(cartEntity);
 
 		} catch (Exception exception) {
-			return ResponseDto.setFailed("Database Error");
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 		
-		return ResponseDto.setSuccess("장바구니에서 전부 삭제되었습니다.", data);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 	}
 
 }
