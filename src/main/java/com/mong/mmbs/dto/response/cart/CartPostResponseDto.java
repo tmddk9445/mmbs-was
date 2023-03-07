@@ -1,7 +1,5 @@
 package com.mong.mmbs.dto.response.cart;
 
-import java.util.List;
-
 import com.mong.mmbs.entity.CartEntity;
 import com.mong.mmbs.entity.ProductEntity;
 
