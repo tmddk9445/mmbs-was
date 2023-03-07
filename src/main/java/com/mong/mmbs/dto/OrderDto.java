@@ -33,8 +33,8 @@ public class OrderDto {
 
 	@NotBlank
 	private int productId;
-  @NotBlank
-  private int orderCount;
+  	@NotBlank
+  	private int orderCount;
 
 	public boolean getOrderUserWhether() {
 		return this.orderUserWhether;

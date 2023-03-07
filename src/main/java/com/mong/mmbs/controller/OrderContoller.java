@@ -1,6 +1,8 @@
 package com.mong.mmbs.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,5 +24,10 @@ public class OrderContoller {
     ResponseDto<?> result = orderService.orderInsert(requestBody);
     return result;
   }
+
+  @GetMapping("/list")
+	public ResponseDto<?> getList(@AuthenticationPrincipal String userId) { 
+		return orderService.getList(userId);
+	}
   
 }

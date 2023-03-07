@@ -2,6 +2,10 @@ package com.mong.mmbs.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,46 +14,57 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mong.mmbs.dto.AmountUpdateDto;
 import com.mong.mmbs.dto.DeleteAllFromCartDto;
 import com.mong.mmbs.dto.DeleteFromCartDto;
-import com.mong.mmbs.dto.PutInCartDto;
+import com.mong.mmbs.dto.request.cart.CartPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
+import com.mong.mmbs.dto.response.cart.CartDeleteAllResponseDto;
+import com.mong.mmbs.dto.response.cart.CartDeleteResponseDto;
+import com.mong.mmbs.dto.response.cart.CartGetResponseDto;
+import com.mong.mmbs.dto.response.cart.CartPatchAllResponseDto;
+import com.mong.mmbs.dto.response.cart.CartPatchResponseDto;
+import com.mong.mmbs.dto.response.cart.CartPostResponseDto;
 import com.mong.mmbs.service.CartService;
+import com.mong.mmbs.util.EndPoint;
 
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping(EndPoint.CART)
 public class CartController {
 
 	@Autowired
 	CartService cartService;
-	@PostMapping("/cartInsert")//상세 페이지에서 장바구니로 담는거
-	public ResponseDto<?> putInCart(@RequestBody PutInCartDto requestBody){
-		System.out.println(requestBody.toString());
-		ResponseDto<?> result = cartService.putInCart(requestBody);
+
+	@PostMapping(EndPoint.CART_POST_NULL)
+	public ResponseDto<CartPostResponseDto> post(@RequestBody CartPostRequestDto requestBody){
+		ResponseDto<CartPostResponseDto> result = cartService.post(requestBody);
 		return result;
 	}
 
-	@PostMapping("/showInCart")//디비에서 장바구니로 불러오는거
-	public ResponseDto<?> showInCart(@AuthenticationPrincipal String userid){
-		ResponseDto<?> result = cartService.showInCart(userid);
+	@GetMapping(EndPoint.CART_GET_NULL)
+	public ResponseDto<CartGetResponseDto> get(@AuthenticationPrincipal String userid){
+		ResponseDto<CartGetResponseDto> result = cartService.get(userid);
 		return result;
 	}
-	@PostMapping("/cartDelete")//장바구니 화면에서 지우는거
-	public ResponseDto<?> deleteFromCart(@AuthenticationPrincipal String userId, @RequestBody DeleteFromCartDto requestBody){
-		ResponseDto<?> result = cartService.deleteFromCart(userId, requestBody);
+
+	@PatchMapping(EndPoint.CART_PATCH_AMOUNT)
+	public ResponseDto<CartPatchResponseDto> amount(@RequestBody AmountUpdateDto requestBody){
+		ResponseDto<CartPatchResponseDto> result = cartService.amount(requestBody);
 		return result;
 	}
-	@PostMapping("/cartAmountUpdate")//장바구니 화면에서 수량 수정
-	public ResponseDto<?> amountUpdate(@RequestBody AmountUpdateDto requestBody){
-		ResponseDto<?> result = cartService.amountUpdate(requestBody);
+	
+	@PatchMapping(EndPoint.CART_PATCH_AMOUNT_ALL)
+	public ResponseDto<CartPatchAllResponseDto> allAmount(@RequestBody DeleteAllFromCartDto requestBody){
+		ResponseDto<CartPatchAllResponseDto> result = cartService.allAmount(requestBody);
 		return result;
 	}
-	@PostMapping("/cartAllDelete")//장바구니 화면에서 전부 지우는거
-	public ResponseDto<?> deleteAllFromCart(@RequestBody DeleteAllFromCartDto requestBody){
-		ResponseDto<?> result = cartService.deleteAllFromCart(requestBody);
+
+	@DeleteMapping(EndPoint.CART_DELETE_CARTID)
+	public ResponseDto<CartDeleteResponseDto> delete(@AuthenticationPrincipal String userId, @PathVariable("cartId") int cartId){
+		ResponseDto<CartDeleteResponseDto> result = cartService.delete(userId, cartId);
 		return result;
 	}
-	@PostMapping("/cartAllAmount")//장바구니 화면에서 수량 합산
-	public ResponseDto<?> cartAllAmount(@RequestBody DeleteAllFromCartDto requestBody){
-		ResponseDto<?> result = cartService.cartAllAmount(requestBody);
+	
+	@DeleteMapping(EndPoint.CART_DELETE_CARTUSERID)
+	public ResponseDto<CartDeleteAllResponseDto> deleteAll(@PathVariable("cartUserId") String cartUserId){
+		ResponseDto<CartDeleteAllResponseDto> result = cartService.deleteAll(cartUserId);
 		return result;
 	}
 }
