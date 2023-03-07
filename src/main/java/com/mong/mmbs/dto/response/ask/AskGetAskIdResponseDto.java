@@ -26,5 +26,6 @@ public class AskGetAskIdResponseDto {
 // //  문의 답변
 //     private String askReply;
 
-    AskEntity ask;
+	AskEntity ask;
+
 }

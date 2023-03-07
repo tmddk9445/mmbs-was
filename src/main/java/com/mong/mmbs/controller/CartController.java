@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mong.mmbs.dto.AmountUpdateDto;
 import com.mong.mmbs.dto.DeleteAllFromCartDto;
-import com.mong.mmbs.dto.DeleteFromCartDto;
 import com.mong.mmbs.dto.request.cart.CartPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
 import com.mong.mmbs.dto.response.cart.CartDeleteAllResponseDto;
@@ -52,7 +51,7 @@ public class CartController {
 	
 	@PatchMapping(EndPoint.CART_PATCH_AMOUNT_ALL)
 	public ResponseDto<CartPatchAllResponseDto> allAmount(@RequestBody DeleteAllFromCartDto requestBody){
-		ResponseDto<CartPatchAllResponseDto> result = cartService.allAmount(requestBody);
+		ResponseDto<CartPatchAllResponseDto> result = cartService.amountAll(requestBody);
 		return result;
 	}
 

@@ -37,12 +37,12 @@ public class CartEntity {
 //  제품 개수
 	private int cartProductAmount;
 	
-	public CartEntity(CartPostRequestDto dto, ProductEntity productEntity) {
+	public CartEntity(CartPostRequestDto dto, ProductEntity product) {
 		this.cartUserId = dto.getCartUserId();
-		this.cartProductId = productEntity.getProductSeq();
-		this.cartProductName = productEntity.getProductTitle();
-		this.cartProductImage = productEntity.getProductImageUrl();
-		this.cartProductPrice = productEntity.getProductPrice();
+		this.cartProductId = product.getProductSeq();
+		this.cartProductName = product.getProductTitle();
+		this.cartProductImage = product.getProductImageUrl();
+		this.cartProductPrice = product.getProductPrice();
 		this.cartProductAmount = dto.getCartProductAmount();
 	}
 }

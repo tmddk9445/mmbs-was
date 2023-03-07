@@ -79,7 +79,7 @@ public class AskService {
       exception.printStackTrace();
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
-
+    
     AskGetAskIdResponseDto data = new AskGetAskIdResponseDto(ask);
 		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 

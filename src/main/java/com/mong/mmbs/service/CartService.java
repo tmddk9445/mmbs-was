@@ -100,17 +100,16 @@ public class CartService {
 
 	}
 
-
 	public ResponseDto<CartPatchResponseDto> amount(AmountUpdateDto dto) {
 
-		List<CartEntity>cartEntity = dto.getSelectCartList();
+		List<CartEntity> cartEntity = dto.getSelectCartList();
 		cartRepository.saveAll(cartEntity);
 
 		CartPatchResponseDto data = new CartPatchResponseDto();
 		return ResponseDto.setSuccess("장바구니에서 수정됬었습니다 .", data);
 	}
 
-	public ResponseDto<CartPatchAllResponseDto> allAmount(DeleteAllFromCartDto dto) {
+	public ResponseDto<CartPatchAllResponseDto> amountAll(DeleteAllFromCartDto dto) {
 
 		String cartUserId = dto.getCartUserId();
 
@@ -129,32 +128,40 @@ public class CartService {
 	public ResponseDto<CartDeleteResponseDto> delete(String userId, int cartId) {
 
 		CartEntity cartEntity = null;
+		List<CartEntity> cartList = new ArrayList<CartEntity>();
+
 		try {
+
 			cartEntity = cartRepository.findByCartId(cartId);
 			if (cartEntity == null) return ResponseDto.setFailed("Does not Exist Cart");
 			cartRepository.delete(cartEntity);
-		} catch (Exception exception) {
-			return ResponseDto.setFailed("Database Error");
-		}
-		
-		List<CartEntity> cartList = new ArrayList<CartEntity>();
-		
-		try {
+
 			cartList = cartRepository.findByCartUserId(userId);
+
 		} catch (Exception exception) {
 			return ResponseDto.setFailed("Database Error");
 		}
 		
 		CartDeleteResponseDto data = new CartDeleteResponseDto(cartList);
-		return ResponseDto.setSuccess("장바구니에서 삭제되었습니다 .", data);
+		return ResponseDto.setSuccess("장바구니에서 삭제되었습니다 .", data);	
+		
 	}
 
 	public ResponseDto<CartDeleteAllResponseDto> deleteAll(String cartUserId) {
 
-		List<CartEntity> cartEntity = cartRepository.findByCartUserId(cartUserId);
-		if (cartEntity != null)
+		List<CartEntity> cartEntity = null;
+		
+		try {
+
+			cartEntity = cartRepository.findByCartUserId(cartUserId);
+			if (cartEntity != null) return ResponseDto.setFailed("Does not Exist Cart");
 			cartRepository.deleteAll(cartEntity);
-		return ResponseDto.setSuccess("장바구니에서 전부 삭제되었습니다 .", null);
+
+		} catch (Exception exception) {
+			return ResponseDto.setFailed("Database Error");
+		}
+		
+		return ResponseDto.setSuccess("장바구니에서 전부 삭제되었습니다.", null);
 	}
 
 }
