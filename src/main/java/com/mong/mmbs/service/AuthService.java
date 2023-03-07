@@ -5,6 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.mong.mmbs.common.constant.ResponseMessage;
 import com.mong.mmbs.dto.FindIdDto;
 import com.mong.mmbs.dto.FindPasswordDto;
 import com.mong.mmbs.dto.ResetPasswordDto;
@@ -18,7 +19,6 @@ import com.mong.mmbs.entity.UserEntity;
 import com.mong.mmbs.repository.RecommendRepository;
 import com.mong.mmbs.repository.UserRepository;
 import com.mong.mmbs.security.TokenProvider;
-import com.mong.mmbs.util.ResponseMessage;
 
 @Service
 public class AuthService {

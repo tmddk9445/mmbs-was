@@ -16,13 +16,4 @@ public class CartPostRequestDto {
 	@NotBlank
 	private int cartProductAmount;
 
-	// public CartPostRequestDto(ProductEntity productEntity){
-	// 	private int productSeq;
-	// 	private String productTitle;
-	// 	private String productImageUrl;
-	// 	private int productPrice;
-	// }
-
-	// @NotBlank
-	// ProductEntity productEntity;
 }

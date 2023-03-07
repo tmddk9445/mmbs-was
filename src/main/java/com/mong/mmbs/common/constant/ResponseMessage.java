@@ -1,4 +1,4 @@
-package com.mong.mmbs.util;
+package com.mong.mmbs.common.constant;
 
 public class ResponseMessage {
     public static final String SUCCESS = "Success";

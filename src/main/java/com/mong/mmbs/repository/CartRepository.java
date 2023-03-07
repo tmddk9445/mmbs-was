@@ -15,8 +15,7 @@ public interface CartRepository extends JpaRepository<CartEntity, Integer>{
 	
 	public List<CartEntity> findByCartUserId(String cartUserId);
 
-	public boolean existsByCartUserIdAndCartProductId(String cartUserId, int cartProudctId);
-
+	// public boolean existsByCartUserIdAndCartProductId(String cartUserId, int cartProudctId);
 	// public void deleteAllByCartUserIdAndCartProductId(String cartUserId, int cartProudctId);
 	
 }

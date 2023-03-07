@@ -1,5 +1,7 @@
 package com.mong.mmbs.dto.response.ask;
 
+import com.mong.mmbs.entity.AskEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,4 +25,15 @@ public class AskPostResponseDto {
 	private String askStatus;
 //  문의 답변
     private String askReply;
+
+	public AskPostResponseDto(AskEntity askEntity){
+		this.askId = askEntity.getAskId();
+		this.askWriter = askEntity.getAskWriter();
+		this.askSort = askEntity.getAskSort();
+		this.askTitle = askEntity.getAskTitle();
+		this.askContent = askEntity.getAskDatetime();
+		this.askDatetime = askEntity.getAskDatetime();
+		this.askStatus = askEntity.getAskStatus();
+		this.askReply = askEntity.getAskReply();
+	}
 }

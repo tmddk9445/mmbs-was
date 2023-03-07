@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mong.mmbs.common.constant.ResponseMessage;
 import com.mong.mmbs.dto.request.ask.AskPatchRequestDto;
 import com.mong.mmbs.dto.request.ask.AskPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
@@ -20,7 +21,6 @@ import com.mong.mmbs.dto.response.ask.AskGetFindResponseDto;
 import com.mong.mmbs.dto.response.ask.AskPatchResponseDto;
 import com.mong.mmbs.dto.response.ask.AskPostResponseDto;
 import com.mong.mmbs.repository.AskRepository;
-import com.mong.mmbs.util.ResponseMessage;
 import com.mong.mmbs.entity.AskEntity;
 
 @Service
@@ -31,37 +31,44 @@ public class AskService {
   // 문의 작성
   public ResponseDto<AskPostResponseDto> post(AskPostRequestDto dto){
 
-		AskEntity askEntity = new AskEntity(dto);
+    AskPostResponseDto data = null;
+
+    AskEntity askEntity = null;
 
 		try {
 
+      askEntity = new AskEntity(dto);
 			askRepository.save(askEntity);
+
+      data = new AskPostResponseDto(askEntity);
 
 		} catch (Exception exception) {
       exception.printStackTrace();
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-    AskPostResponseDto data = new AskPostResponseDto();
-	return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+	  return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
 	}
 
   // 문의 리스트 출력
   public ResponseDto<AskGetListResponseDto> getList(String userId) {
 
-		List<AskEntity> askList = new ArrayList<AskEntity>();
+	  AskGetListResponseDto data = null;
+
+    List<AskEntity> askList = new ArrayList<AskEntity>();
 
 		try {
 
 			askList = askRepository.findByAskWriter(userId);
+
+      data = new AskGetListResponseDto(askList);
 
 		} catch(Exception exception){
       exception.printStackTrace();
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-    AskGetListResponseDto data = new AskGetListResponseDto(askList);
 		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
 	}
@@ -69,41 +76,46 @@ public class AskService {
   // 수정할 문의 출력
 	public ResponseDto<AskGetAskIdResponseDto> get(int askId){
 		
-		AskEntity ask = null;
+    AskGetAskIdResponseDto data = null;
+
+    AskEntity askEntity = null;
 
 		try {
 
-			ask = askRepository.findByAskId(askId);
+			askEntity = askRepository.findByAskId(askId);
+
+      data = new AskGetAskIdResponseDto(askEntity);
 
 		} catch (Exception exception) {
       exception.printStackTrace();
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
-    
-    AskGetAskIdResponseDto data = new AskGetAskIdResponseDto(ask);
+
 		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
 	}
 
   // 문의 검색
-  public ResponseDto<AskGetFindResponseDto> find (String userId, String askStatus, int months, String askSort) {
+  public ResponseDto<AskGetFindResponseDto> find(String userId, String askStatus, int months, String askSort) {
 
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = Date.from(Instant.now().minus(months * 30, ChronoUnit.DAYS));
 		String askDateTime = simpleDateFormat.format(date);
+
+    AskGetFindResponseDto data = null;
 
 		List<AskEntity> askList = new ArrayList<AskEntity>();
 
 		try {
 
 			askList = askRepository.findByAskWriterAndAskDatetimeGreaterThanEqualAndAskSortContainsAndAskStatusContainsOrderByAskDatetimeDesc(userId, askDateTime, askSort, askStatus);
+      data = new AskGetFindResponseDto(askList);
 
 		} catch(Exception exception){
 			exception.printStackTrace();
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-    AskGetFindResponseDto data = new AskGetFindResponseDto(askList);
 		return ResponseDto.setSuccess("Success", data);
 	
 	}
@@ -111,23 +123,26 @@ public class AskService {
   // 문의 수정
 	public ResponseDto<AskPatchResponseDto> patch(AskPatchRequestDto dto) {
 
-		AskEntity ask = null;
+    AskPatchResponseDto data = null;
+
+		AskEntity askEntity = null;
 		int askId = dto.getAskId();
 
 		try {
 
-			ask = askRepository.findByAskId(askId);
-			if (ask == null) ResponseDto.setFailed("Does Not Exist User");
+			askEntity = askRepository.findByAskId(askId);
+			if (askEntity == null) return ResponseDto.setFailed("Does Not Exist User");
 
-      ask.patch(dto);
-      askRepository.save(ask);
+      askEntity.patch(dto);
+      askRepository.save(askEntity);
+
+      data = new AskPatchResponseDto(askEntity);
 
 		} catch (Exception exception) {
       exception.printStackTrace();
 			ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-    AskPatchResponseDto data = new AskPatchResponseDto();
 		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 		
 	}
@@ -135,21 +150,24 @@ public class AskService {
   // 문의 삭제
 	public ResponseDto<AskDeleteResponseDto> delete(String userId, int askId){
 
-    List<AskEntity> list = new ArrayList<AskEntity>();
+    AskDeleteResponseDto data = null;
+
+    List<AskEntity> askList = new ArrayList<AskEntity>();
 
 		try {
 
 			AskEntity askEntity = askRepository.findByAskId(askId);
 			askRepository.delete(askEntity);
 
-      list = askRepository.findByAskWriter(userId);
+      askList = askRepository.findByAskWriter(userId);
+
+      data = new AskDeleteResponseDto(askList);
 
 		} catch (Exception exception) {
       exception.printStackTrace();
 			ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-    AskDeleteResponseDto data = new AskDeleteResponseDto(list);
 		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
 	}
