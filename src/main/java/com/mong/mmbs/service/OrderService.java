@@ -31,40 +31,58 @@ public class OrderService {
     
     int productId = dto.getProductId();
     ProductEntity product = null;
+
     try {
+
       product = productRepository.findByProductSeq(productId);
       if (product == null)
         return ResponseDto.setFailed("Does Not Exists Product");
+
     } catch (Exception exception) {
       return ResponseDto.setFailed("DataBase Error");
+
     }
 
     String guestPassword = dto.getOrderGuestPassword();
     String guestPasswordCheck = dto.getOrderGuestPasswordCheck();
 
     if (guestPassword != null) {
+
       try {
+
         if (!guestPassword.equals(guestPasswordCheck))
           return ResponseDto.setFailed("GuestPassword Does not match");
+
       } catch (Exception exception) {
         return ResponseDto.setFailed("Exception Error");
       }
+
     }
 
     OrderEntity order = new OrderEntity(dto, product);
     System.out.println(order.toString());
+
     try {
+
       orderRepository.save(order);
+      
     } catch (Exception exception) {
       return ResponseDto.setFailed("DataBase Error");
+
     }
+
     OrderDetailEntity orderDetail = new OrderDetailEntity(dto, order, product);
+
     try {
+
       orderDetailRepository.save(orderDetail);
+
     } catch (Exception exception) {
       return ResponseDto.setFailed("DataBase Error");
     }
+
     return ResponseDto.setSuccess("result", orderDetail);
+
   }
 
   public ResponseDto<?> getList(String userId) {
@@ -73,15 +91,21 @@ public class OrderService {
 		List<OrderEntity> orderList = new ArrayList<OrderEntity>();
 
 		try {
+
 			orderList = orderRepository.findByOrderUserId(userId);
+
 			for ( OrderEntity order : orderList ) {
 				List<OrderDetailEntity> detailList = orderDetailRepository.findByOrderNumber(order.getOrderNumber());
 				OrderListResponseDto resultItem = new OrderListResponseDto(order, detailList);
 				result.add(resultItem);
+
 			}
+
 		} catch(Exception exception){
 			return ResponseDto.setFailed("Database Error");
 		}
+
 		return ResponseDto.setSuccess("Success", result);
+    
 	}
 }

@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.mong.mmbs.dto.request.gift.GiftPostRequestDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +25,13 @@ public class GiftEntity {
     private String giftName;
 //  사은품 이미지
     private String giftImage;
+
+    public GiftEntity(GiftPostRequestDto dto){
+		this.giftCode = dto.getGiftCode();
+		this.giftName = dto.getGiftName();
+		this.giftImage = dto.getGiftImage();
+	}
+
+	
+    
 }

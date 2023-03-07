@@ -7,6 +7,7 @@ import com.mong.mmbs.entity.GiftEntity;
 
 @Repository
 public interface GiftRepository extends JpaRepository<GiftEntity, Integer>{
+	
 	public GiftEntity findByGiftCode(int giftCode);
 
 }
