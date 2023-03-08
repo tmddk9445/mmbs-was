@@ -11,6 +11,10 @@ public class ApiMappingPattern {
     public static final String CART = "/apis/cart";
 
     public static final String ORDER = "/apis/order";
+    
+    public static final String PRODUCT = "/apis/product";
+    
+    public static final String PRODUCT_LIST = "";
 
     
 

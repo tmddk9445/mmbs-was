@@ -7,8 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.mong.mmbs.dto.UserUpdateDto;
 import com.mong.mmbs.dto.request.auth.SignUpRequestDto;
+import com.mong.mmbs.dto.request.user.UserPatchRequestDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -56,7 +56,7 @@ public class UserEntity {
 		this.userSignUpDate = dateFormat.format(new Date());
 	}
 	
-	public void setUpdateUser(UserUpdateDto dto) {
+	public void setUpdateUser(UserPatchRequestDto dto) {
 		
 		this.userAddress = dto.getUserAddress();
 		this.userAddressDetail =dto.getUserAddressDetail();

@@ -8,27 +8,40 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mong.mmbs.common.constant.ApiMappingPattern;
 import com.mong.mmbs.dto.DtlLikepageDto;
-import com.mong.mmbs.dto.SearchDto;
+import com.mong.mmbs.dto.request.product.ProductSearchPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
+import com.mong.mmbs.dto.response.product.ProductSearchPostResponseDto;
 import com.mong.mmbs.repository.ProductRepository;
 import com.mong.mmbs.service.ProductService;
 
 @RestController
-@RequestMapping("/apis/product")
+@RequestMapping(ApiMappingPattern.PRODUCT)
 public class ProductController {
     
     @Autowired ProductService productService;
     @Autowired ProductRepository productRepository;
+
+    private static final String PRODUCT_POST_FIND = "/findProduct";
+    private static final String BEST_SELLER = "/bestSeller";
+
+    @PostMapping(PRODUCT_POST_FIND)
+    public ResponseDto<ProductSearchPostResponseDto> postProductSearch(@RequestBody ProductSearchPostRequestDto requestBody) {
+        ResponseDto<ProductSearchPostResponseDto> result 
+            = productService.searchPostProduct(requestBody);
+        return result;
+    }
     
-    @GetMapping("/best")
-    public ResponseDto<?> Bestseller(){
-        return productService.Bestseller();
+    @GetMapping(BEST_SELLER)
+    public ResponseDto<?> bestSeller(){
+
+        return productService.bestSeller();
     }
 
     @GetMapping("/Image")
-    public ResponseDto<?>MainImage(){
-        return productService.MainImage();
+    public ResponseDto<?> mainImage(){
+        return productService.mainImage();
     }
 
     @GetMapping("/dtlPage/{productSeq}")
@@ -42,9 +55,5 @@ public class ProductController {
 		return LikePage;
 	}
 
-    @PostMapping("/search")
-    public ResponseDto<?> search(@RequestBody SearchDto requsetBody) {
-        ResponseDto<?> result = productService.search(requsetBody);
-        return result;
-    }
+
 }

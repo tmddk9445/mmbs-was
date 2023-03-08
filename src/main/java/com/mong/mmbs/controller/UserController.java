@@ -7,15 +7,17 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mong.mmbs.dto.UserUpdateDto;
 import com.mong.mmbs.dto.response.ResponseDto;
+import com.mong.mmbs.dto.response.user.UserDeleteResponseDto;
+import com.mong.mmbs.dto.response.user.UserGetResponseDto;
+import com.mong.mmbs.dto.response.user.UserPatchResponseDto;
 import com.mong.mmbs.common.constant.ApiMappingPattern;
-import com.mong.mmbs.dto.UserDeleteDto;
-
+import com.mong.mmbs.dto.request.user.UserPatchRequestDto;
 import com.mong.mmbs.service.UserService;
 
 @RestController
@@ -29,18 +31,21 @@ public class UserController {
 	private static final String DELETE_USER = "/{userEmail}";
 	
 	@GetMapping(GET_USER)
-	public ResponseDto<?> getUser(@AuthenticationPrincipal String userId) {
-		return userService.getUser(userId);
+	public ResponseDto<UserGetResponseDto> getUser(@AuthenticationPrincipal String userId) {
+		ResponseDto<UserGetResponseDto> response = userService.getUser(userId);
+		return response;
 	}
 
 	@PatchMapping(PATCH_USER_UPDATE)
-	public ResponseDto<?> patchUser(@Valid @RequestBody UserUpdateDto dto) {
-		return userService.patchUser(dto);
+	public ResponseDto<UserPatchResponseDto> patchUser(@Valid @RequestBody UserPatchRequestDto dto) {
+		ResponseDto<UserPatchResponseDto> response = userService.patchUser(dto);
+		return response;
 	}
 	
 	@DeleteMapping(DELETE_USER)
-	public ResponseDto<?> deleteUser(@AuthenticationPrincipal String userId, @PathVariable("userEmail") String userEmail) {
-		return userService.deleteUser(userId, dto);
+	public ResponseDto<UserDeleteResponseDto> deleteUser(@AuthenticationPrincipal String userId, @PathVariable("userEmail") String userEmail) {
+		ResponseDto<UserDeleteResponseDto> response = userService.deleteUser(userId, userEmail);
+		return response;
 	} 
 
 }
