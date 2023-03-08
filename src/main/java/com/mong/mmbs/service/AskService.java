@@ -3,7 +3,6 @@ package com.mong.mmbs.service;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,11 +32,9 @@ public class AskService {
 
     AskPostResponseDto data = null;
 
-    AskEntity askEntity = null;
-
 		try {
 
-      askEntity = new AskEntity(dto);
+      AskEntity askEntity = new AskEntity(dto);
 			askRepository.save(askEntity);
 
       data = new AskPostResponseDto(askEntity);
@@ -56,11 +53,9 @@ public class AskService {
 
 	  AskGetListResponseDto data = null;
 
-    List<AskEntity> askList = new ArrayList<AskEntity>();
-
 		try {
 
-			askList = askRepository.findByAskWriter(userId);
+			List<AskEntity> askList = askRepository.findByAskWriter(userId);
 
       data = new AskGetListResponseDto(askList);
 
@@ -78,11 +73,9 @@ public class AskService {
 		
     AskGetAskIdResponseDto data = null;
 
-    AskEntity askEntity = null;
-
 		try {
 
-			askEntity = askRepository.findByAskId(askId);
+			AskEntity askEntity = askRepository.findByAskId(askId);
 
       data = new AskGetAskIdResponseDto(askEntity);
 
@@ -104,11 +97,9 @@ public class AskService {
 
     AskGetFindResponseDto data = null;
 
-		List<AskEntity> askList = new ArrayList<AskEntity>();
-
 		try {
 
-			askList = askRepository.findByAskWriterAndAskDatetimeGreaterThanEqualAndAskSortContainsAndAskStatusContainsOrderByAskDatetimeDesc(userId, askDateTime, askSort, askStatus);
+			List<AskEntity> askList = askRepository.findByAskWriterAndAskDatetimeGreaterThanEqualAndAskSortContainsAndAskStatusContainsOrderByAskDatetimeDesc(userId, askDateTime, askSort, askStatus);
       data = new AskGetFindResponseDto(askList);
 
 		} catch(Exception exception){
@@ -116,7 +107,7 @@ public class AskService {
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-		return ResponseDto.setSuccess("Success", data);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 	
 	}
 
@@ -125,13 +116,12 @@ public class AskService {
 
     AskPatchResponseDto data = null;
 
-		AskEntity askEntity = null;
 		int askId = dto.getAskId();
 
 		try {
 
-			askEntity = askRepository.findByAskId(askId);
-			if (askEntity == null) return ResponseDto.setFailed("Does Not Exist User");
+			AskEntity askEntity = askRepository.findByAskId(askId);
+			if (askEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_USER);
 
       askEntity.patch(dto);
       askRepository.save(askEntity);
@@ -152,14 +142,12 @@ public class AskService {
 
     AskDeleteResponseDto data = null;
 
-    List<AskEntity> askList = new ArrayList<AskEntity>();
-
 		try {
 
 			AskEntity askEntity = askRepository.findByAskId(askId);
 			askRepository.delete(askEntity);
 
-      askList = askRepository.findByAskWriter(userId);
+      List<AskEntity> askList = askRepository.findByAskWriter(userId);
 
       data = new AskDeleteResponseDto(askList);
 

@@ -1,5 +1,7 @@
 package com.mong.mmbs.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mong.mmbs.common.constant.ApiMappingPattern;
-import com.mong.mmbs.dto.FindIdDto;
-import com.mong.mmbs.dto.FindPasswordDto;
 import com.mong.mmbs.dto.MailDto;
-import com.mong.mmbs.dto.ResetPasswordDto;
-import com.mong.mmbs.dto.SignInDto;
-import com.mong.mmbs.dto.SignInResponseDto;
 import com.mong.mmbs.dto.request.auth.SignUpRequestDto;
+import com.mong.mmbs.dto.request.auth.resetPasswordPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
+import com.mong.mmbs.dto.response.auth.SignInGetResponseDto;
 import com.mong.mmbs.dto.response.auth.SignUpPostResponseDto;
+import com.mong.mmbs.dto.response.auth.findIdGetResponseDto;
+import com.mong.mmbs.dto.response.auth.findPasswordGetResponseDto;
+import com.mong.mmbs.dto.response.auth.resetPasswordPostResponseDto;
 import com.mong.mmbs.service.AuthService;
 import com.mong.mmbs.service.MailService;
 import com.mong.mmbs.service.MemberService;
@@ -36,41 +38,42 @@ public class AuthController {
 	@Autowired MailService mailService;
 
   private static final String POST_SIGN_UP = "/signUp";
-  private static final String POST_FIND_ID = "/findId";
-  private static final String POST_FIND_PASSWORD = "/findPassword";
-  private static final String POST_RESET_PASSWORD = "/resetPassword";
-  private static final String POST_SIGN_IN = "/signIn";
+	private static final String POST_RESET_PASSWORD = "/resetPassword";
+
+  private static final String GET_FIND_ID = "/findId";
+  private static final String GET_FIND_PASSWORD = "/findPassword";
+  private static final String GET_SIGN_IN = "/signIn";
 	
 	@PostMapping(POST_SIGN_UP)
-	public ResponseDto<SignUpPostResponseDto> signUp(@RequestBody SignUpRequestDto requestBody) {
+	public ResponseDto<SignUpPostResponseDto> signUp(@Valid @RequestBody SignUpRequestDto requestBody) {
 		ResponseDto<SignUpPostResponseDto> result = authService.signUp(requestBody);
 		return result;
 	}
 
-	@PostMapping(POST_FIND_ID)
-	public ResponseDto<?> findId(@RequestBody FindIdDto requestBody){
-		ResponseDto<?> result = authService.findId(requestBody);
-		return result;
-	}
-
-	@PostMapping(POST_FIND_PASSWORD)
-	public ResponseDto<?> findPassword(@RequestBody FindPasswordDto requestBody){
-		ResponseDto<?> result = authService.findPassword(requestBody);
-		return result;
-	}
-
 	@PostMapping(POST_RESET_PASSWORD)
-	public ResponseDto<?> resetPassword(@RequestBody ResetPasswordDto requestBody){
-		ResponseDto<?> result = authService.resetPassword(requestBody);
+	public ResponseDto<resetPasswordPostResponseDto> resetPassword(@Valid @RequestBody resetPasswordPostRequestDto requestBody){
+		ResponseDto<resetPasswordPostResponseDto> result = authService.resetPassword(requestBody);
 		return result;
 	}
 
-	@PostMapping(POST_SIGN_IN)
-	public ResponseDto<SignInResponseDto> signIn(@RequestBody SignInDto requestBody) {
-		ResponseDto<SignInResponseDto> result = authService.signIn(requestBody);
+	@GetMapping(GET_FIND_ID)
+	public ResponseDto<findIdGetResponseDto> findId(@PathVariable("userEmail") String userEmail, @PathVariable("userName") String userName){
+		ResponseDto<findIdGetResponseDto> result = authService.findId(userEmail, userName);
 		return result;
 	}
-	
+
+	@GetMapping(GET_FIND_PASSWORD)
+	public ResponseDto<findPasswordGetResponseDto> findPassword(@PathVariable("userId")String userId, @PathVariable("userName") String userName, @PathVariable("userEmail") String userEmail){
+		ResponseDto<findPasswordGetResponseDto> result = authService.findPassword(userId, userName, userEmail);
+		return result;
+	}
+
+	@GetMapping(GET_SIGN_IN)
+	public ResponseDto<SignInGetResponseDto> signIn(@PathVariable("userId")String userId, @PathVariable("userPassword")String userPassword) {
+		ResponseDto<SignInGetResponseDto> result = authService.signIn(userId, userPassword);
+		return result;
+	}
+
 	/** 이메일이 DB에 존재하는지 확인 **/
     @GetMapping("/checkEmail/{userEmail}")
     public boolean checkEmail(@PathVariable("userEmail") String userEmail){

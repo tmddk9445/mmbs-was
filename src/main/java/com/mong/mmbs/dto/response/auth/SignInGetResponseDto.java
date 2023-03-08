@@ -1,4 +1,4 @@
-package com.mong.mmbs.dto;
+package com.mong.mmbs.dto.response.auth;
 
 import com.mong.mmbs.entity.UserEntity;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignInResponseDto {
+public class SignInGetResponseDto {
 	private String token;
 	private int exprTime;
 	private UserEntity user;

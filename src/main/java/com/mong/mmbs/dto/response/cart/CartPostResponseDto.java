@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartPostResponseDto {
-    // 장바구니 시퀀스
-    private int cartId;
+  // 장바구니 시퀀스
+  private int cartId;
 //  유저 아이디
 	private String cartUserId;
 //  제품 아이디

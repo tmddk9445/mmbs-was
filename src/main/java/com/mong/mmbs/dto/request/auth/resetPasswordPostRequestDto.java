@@ -1,4 +1,4 @@
-package com.mong.mmbs.dto;
+package com.mong.mmbs.dto.request.auth;
 
 import javax.validation.constraints.NotBlank;
 
@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FindIdDto {
+public class resetPasswordPostRequestDto {
+	private String userId;
 	@NotBlank
-	private String userName;
-	@NotBlank
-	private String userEmail;
-	
+	private String userPassword;
+	private String userPassword2;
 }

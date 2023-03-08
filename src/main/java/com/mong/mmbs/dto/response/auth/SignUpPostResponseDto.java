@@ -5,12 +5,18 @@ import com.mong.mmbs.entity.UserEntity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class SignUpPostResponseDto {
-    UserEntity user;
-    RecommendEntity recommend;
+
+    UserEntity userEntity;
+    RecommendEntity recommendEntity;
+
+    public SignUpPostResponseDto(UserEntity userEntity, RecommendEntity recommendEntity) {
+	
+        this.userEntity = userEntity;
+        this.recommendEntity = recommendEntity;
+        
+    }
 }

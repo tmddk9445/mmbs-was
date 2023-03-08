@@ -37,16 +37,14 @@ public class OrderService {
     OrderPostResponseDto data = null;
 
     int productId = dto.getProductId();
-    ProductEntity productEntity = null;
-
-    OrderEntity orderEntity = new OrderEntity(dto, productEntity);
-
-    OrderDetailEntity orderDetailEntity = new OrderDetailEntity(dto, orderEntity, productEntity);
-
+    
     try {
 
-      productEntity = productRepository.findByProductSeq(productId);
+      ProductEntity productEntity = productRepository.findByProductSeq(productId);
       if (productEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_ORDER_PRODUCT);
+
+			OrderEntity orderEntity = new OrderEntity(dto, productEntity);
+			OrderDetailEntity orderDetailEntity = new OrderDetailEntity(dto, orderEntity, productEntity);
 
       orderRepository.save(orderEntity);
       orderDetailRepository.save(orderDetailEntity);
@@ -54,6 +52,7 @@ public class OrderService {
       data = new OrderPostResponseDto(orderEntity, orderDetailEntity);
 
     } catch (Exception exception) {
+			exception.printStackTrace();
       return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 
     }
@@ -74,6 +73,7 @@ public class OrderService {
             return ResponseDto.setFailed(ResponseMessage.NOT_MATCH_GUESTPASSWORD);
   
         } catch (Exception exception) {
+					exception.printStackTrace();
           return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
         }
 
@@ -88,11 +88,10 @@ public class OrderService {
   public ResponseDto<List<OrderGetListResponseDto>> getOrderList(String userId) {
 
 		List<OrderGetListResponseDto> data = new ArrayList<OrderGetListResponseDto>();
-		List<OrderEntity> orderList = new ArrayList<OrderEntity>();
 
 		try {
 
-			orderList = orderRepository.findByOrderUserId(userId);
+			List<OrderEntity> orderList = orderRepository.findByOrderUserId(userId);
 
 			for ( OrderEntity order : orderList ) {
 
@@ -104,6 +103,7 @@ public class OrderService {
 			}
 
 		} catch(Exception exception){
+			exception.printStackTrace();
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
@@ -115,15 +115,14 @@ public class OrderService {
 
 		GiftGetResponseDto data = null;
 
-		List<GiftEntity> giftList = null;
-
 		try {
 
-			giftList = giftRepository.findAll();
+			List<GiftEntity> giftList = giftRepository.findAll();
 
 			data = new GiftGetResponseDto(giftList);
 
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
@@ -135,14 +134,12 @@ public class OrderService {
 
 		GiftPatchResponseDto data = null;
 
-		OrderEntity orderEntity = null;
-
 		int orderGiftCode = dto.getOrderGiftCode();
 		String orderNumber = dto.getOrderNumber();
 
 		try {
 
-			orderEntity = orderRepository.findByOrderNumber(orderNumber);
+			OrderEntity orderEntity = orderRepository.findByOrderNumber(orderNumber);
 			if (orderEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_ORDER);
 
 			orderEntity.setOrderGiftCode(orderGiftCode);
@@ -151,6 +148,7 @@ public class OrderService {
 			data = new GiftPatchResponseDto();
 
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 

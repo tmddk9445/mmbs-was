@@ -6,14 +6,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mong.mmbs.common.constant.ResponseMessage;
-import com.mong.mmbs.dto.FindIdDto;
-import com.mong.mmbs.dto.FindPasswordDto;
-import com.mong.mmbs.dto.ResetPasswordDto;
-import com.mong.mmbs.dto.SignInDto;
-import com.mong.mmbs.dto.SignInResponseDto;
 import com.mong.mmbs.dto.request.auth.SignUpRequestDto;
+import com.mong.mmbs.dto.request.auth.resetPasswordPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
+import com.mong.mmbs.dto.response.auth.SignInGetResponseDto;
 import com.mong.mmbs.dto.response.auth.SignUpPostResponseDto;
+import com.mong.mmbs.dto.response.auth.findIdGetResponseDto;
+import com.mong.mmbs.dto.response.auth.findPasswordGetResponseDto;
+import com.mong.mmbs.dto.response.auth.resetPasswordPostResponseDto;
 import com.mong.mmbs.entity.RecommendEntity;
 import com.mong.mmbs.entity.UserEntity;
 import com.mong.mmbs.repository.RecommendRepository;
@@ -23,135 +23,168 @@ import com.mong.mmbs.security.TokenProvider;
 @Service
 public class AuthService {
 
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    RecommendRepository recommendRepository;
-    @Autowired
-    TokenProvider tokenProvider;
+  @Autowired
+  UserRepository userRepository;
+  @Autowired
+  RecommendRepository recommendRepository;
+  @Autowired
+  TokenProvider tokenProvider;
 
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    
-    public ResponseDto<SignUpPostResponseDto> signUp(SignUpRequestDto dto) {
+  private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        String userId = dto.getUserId();
-        if (userRepository.existsById(userId)) return ResponseDto.setFailed(ResponseMessage.EXIST_DATA);
+  public ResponseDto<SignUpPostResponseDto> signUp(SignUpRequestDto dto) {
 
-        String userEmail = dto.getUserEmail();
-        if (userRepository.existsByUserEmail(userEmail)) 
-            return ResponseDto.setFailed(ResponseMessage.EXIST_DATA);
+    SignUpPostResponseDto data = null;
 
-        String userPassword = dto.getUserPassword();
-        String userPasswordCheck = dto.getUserPasswordCheck();
+    String userId = dto.getUserId();
+    if (userRepository.existsById(userId))
+      return ResponseDto.setFailed(ResponseMessage.EXIST_DATA);
 
-        if (!userPassword.equals(userPasswordCheck)) 
-            return ResponseDto.setFailed(ResponseMessage.NOT_MATCH_PASSWORD);
+    String userEmail = dto.getUserEmail();
+    if (userRepository.existsByUserEmail(userEmail))
+      return ResponseDto.setFailed(ResponseMessage.EXIST_DATA);
 
-        //# description: 실제 프로세스 //
+    String userPassword = dto.getUserPassword();
+    String userPasswordCheck = dto.getUserPasswordCheck();
+    if (!userPassword.equals(userPasswordCheck))
+      return ResponseDto.setFailed(ResponseMessage.NOT_MATCH_PASSWORD);
 
-        //# description: 추천인 //
-        String recommendedUserId = dto.getRecommendedUserId();
+    String recommendedUserId = dto.getRecommendedUserId();
 
-        if (recommendedUserId != null && !recommendedUserId.isEmpty()) {
+    RecommendEntity recommendEntity = new RecommendEntity();
 
-            //# description: 추천인 존재 여부 검증 //
-            if (!userRepository.existsById(recommendedUserId)) 
-                return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+    if (recommendedUserId != null && !recommendedUserId.isEmpty()) {
 
-            //# description: Entity 생성 //
-            RecommendEntity recommendEntity = new RecommendEntity();
-            
-            try{
+      if (!userRepository.existsById(recommendedUserId))
+        return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 
-                recommendRepository.save(recommendEntity);
+      try {
 
-            } catch (Exception error) {
-                return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
-            }
-            
-            return ResponseDto.setSuccess(ResponseMessage.SUCCESS, null);
-        }
-        
-        // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(userPassword);
-        dto.setUserPassword(encodedPassword);
+        recommendRepository.save(recommendEntity);
 
-        UserEntity userEntity = new UserEntity(dto);
+      } catch (Exception exception) {
+        exception.printStackTrace();
+        return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+      }
 
-        try {
-
-          userRepository.save(userEntity);        
-          
-        } catch (Exception error) {
-          return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
-        }
-
-        
-        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, null);
     }
 
-    //입력한 유저이름과 이메일이 둘다 맞는지만 판단하는 메서드
-    public ResponseDto<?> findId(FindIdDto dto) {
-    	String userName = dto.getUserName();
-    	String userEmail = dto.getUserEmail();
+    String encodedPassword = passwordEncoder.encode(userPassword);
+    dto.setUserPassword(encodedPassword);
 
-    	UserEntity userEntity = userRepository.findByUserEmailAndUserName(userEmail, userName);
-    	if (userEntity == null) return ResponseDto.setFailed("일치하는 정보가 없음"); 
-    	return ResponseDto.setSuccess("성공", userEntity.getUserId());
-    }
-    
-    public ResponseDto<?> findPassword(FindPasswordDto dto){
-    	String userId = dto.getUserId();
-    	String userName = dto.getUserName();
-    	String userEmail = dto.getUserEmail();
-    	
-    	UserEntity userEntity = userRepository.findByUserIdAndUserNameAndUserEmail(userId, userName, userEmail);
-    	if(userEntity == null) return ResponseDto.setFailed(" 일치하는 정보가 없음");
-    	return ResponseDto.setSuccess("성공",null);
-    }
-    
-    public ResponseDto<?> resetPassword(ResetPasswordDto dto){
-    	String userId = dto.getUserId();
-    	String password = dto.getUserPassword();
-    	String password2 = dto.getUserPassword2();
-    	
-    	if(!password.equals(password2)) {
-    		return ResponseDto.setFailed("Password Does Not matched!");
-    	}
-    		
-    	UserEntity userEntity = userRepository.findByUserId(userId);
-    	
-    	String encodedPassword = passwordEncoder.encode(password);
-    	userEntity.setUserPassword(encodedPassword);
-    	userRepository.save(userEntity);
-    	return ResponseDto.setSuccess("성공", null);
+    UserEntity userEntity = new UserEntity(dto);
+
+    try {
+
+      userRepository.save(userEntity);
+
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
     }
 
-    
-    
-    public ResponseDto<SignInResponseDto> signIn(SignInDto dto) {
-    	// 필수로 아이디와 패스워드를 받아와야 한다. @NotBlank //
-    	// 데이터가 있는지 검증 //
-    	String userId = dto.getUserId();
-    	String userPassword = dto.getUserPassword();
-    	
-    	UserEntity userEntity = null;
-    	try {
-    		userEntity = userRepository.findByUserId(userId);    
-    		boolean matched = passwordEncoder.matches(userPassword, userEntity.getUserPassword());
-    		if (!matched) return ResponseDto.setFailed("Password Not Matched");
-    	} catch (Exception error) {
-    		return ResponseDto.setFailed("DataBase Error");
-    	}
-    	
-    	userEntity.setUserPassword("");
-    	
-    	String token = tokenProvider.create(userId);
-    	int exprTime = 3600000;
-    	
-    	SignInResponseDto signInResponseDto = new SignInResponseDto(token, exprTime, userEntity);
-    	return ResponseDto.setSuccess("Sign In Success", signInResponseDto);
-    
+    data = new SignUpPostResponseDto(userEntity, recommendEntity);
+    return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+
+  }
+
+  public ResponseDto<findIdGetResponseDto> findId(String userEmail, String userName) {
+
+    findIdGetResponseDto data = null;
+
+    try {
+
+      UserEntity userEntity = userRepository.findByUserEmailAndUserName(userEmail, userName);
+
+      if (userEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_DATA);
+
+      data = new findIdGetResponseDto(userEntity.getUserId());
+
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
     }
+    
+    return ResponseDto.setSuccess("성공", data);
+
+  }
+
+  public ResponseDto<findPasswordGetResponseDto> findPassword(String userId, String userName, String userEmail) {
+
+    findPasswordGetResponseDto data = null;
+
+    try {
+
+      UserEntity userEntity = userRepository.findByUserIdAndUserNameAndUserEmail(userId, userName, userEmail);
+    
+      if (userEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_DATA);
+
+      data = new findPasswordGetResponseDto(userEntity.getUserPassword());
+
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+    }
+    
+    return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+  }
+
+  public ResponseDto<resetPasswordPostResponseDto> resetPassword(resetPasswordPostRequestDto dto) {
+
+    resetPasswordPostResponseDto data = null;
+
+    String userId = dto.getUserId();
+    String password = dto.getUserPassword();
+    String password2 = dto.getUserPassword2();
+
+    try {
+
+      if (!password.equals(password2))
+        return ResponseDto.setFailed(ResponseMessage.NOT_MATCH_PASSWORD);
+
+      UserEntity userEntity = userRepository.findByUserId(userId);
+
+      String encodedPassword = passwordEncoder.encode(password);
+      userEntity.setUserPassword(encodedPassword);
+      userRepository.save(userEntity);
+
+      data = new resetPasswordPostResponseDto(userEntity);
+
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+    }
+
+    return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+  }
+
+  public ResponseDto<SignInGetResponseDto> signIn(String userId, String userPassword) {
+
+    SignInGetResponseDto data = null;
+    UserEntity userEntity = null;
+
+    try {
+
+      userEntity = userRepository.findByUserId(userId);
+
+      boolean matched = passwordEncoder.matches(userPassword, userEntity.getUserPassword());
+      if (!matched)
+        return ResponseDto.setFailed(ResponseMessage.NOT_MATCH_PASSWORD);
+
+      userEntity.setUserPassword(ResponseMessage.NULL);
+
+      String token = tokenProvider.create(userId);
+      int exprTime = 3600000;
+
+      data = new SignInGetResponseDto(token, exprTime, userEntity);
+
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+    }
+
+    return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+
+  }
+
 }
-
