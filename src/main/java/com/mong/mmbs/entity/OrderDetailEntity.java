@@ -1,6 +1,6 @@
 package com.mong.mmbs.entity;
 
-import com.mong.mmbs.dto.OrderDto;
+import com.mong.mmbs.dto.request.order.OrderPostRequestDto;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,7 +35,7 @@ public class OrderDetailEntity {
 //	갯수
 	private int productCount;
 
-	public OrderDetailEntity(OrderDto dto, OrderEntity order, ProductEntity product) {
+	public OrderDetailEntity(OrderPostRequestDto dto, OrderEntity order, ProductEntity product) {
 		this.productId = dto.getProductId();
 		this.productCount = dto.getOrderCount();
 		this.orderNumber = order.getOrderNumber();

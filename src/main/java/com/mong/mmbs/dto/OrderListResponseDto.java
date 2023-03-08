@@ -13,6 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderListResponseDto {
+
   private OrderEntity order;
   private List<OrderDetailEntity> orderDetailList;
+  
 }

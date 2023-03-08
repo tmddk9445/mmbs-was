@@ -1,4 +1,4 @@
-package com.mong.mmbs.dto.response.gift;
+package com.mong.mmbs.dto.response.order;
 
 import com.mong.mmbs.entity.GiftEntity;
 
@@ -16,8 +16,11 @@ public class GiftPatchResponseDto {
     private String giftImage;
 
     public GiftPatchResponseDto(GiftEntity giftEntity){
+
 		this.giftCode = giftEntity.getGiftCode();
 		this.giftName = giftEntity.getGiftName();
 		this.giftImage = giftEntity.getGiftImage();
+    
 	}
+
 }

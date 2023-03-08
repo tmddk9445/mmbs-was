@@ -6,86 +6,86 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mong.mmbs.repository.GiftRepository;
 import com.mong.mmbs.repository.OrderDetailRepository;
 import com.mong.mmbs.repository.OrderRepository;
 import com.mong.mmbs.repository.ProductRepository;
 
-import com.mong.mmbs.dto.OrderDto;
+import com.mong.mmbs.dto.request.order.OrderPostRequestDto;
+import com.mong.mmbs.common.constant.ResponseMessage;
 import com.mong.mmbs.dto.OrderListResponseDto;
+import com.mong.mmbs.dto.request.order.GiftPatchReqeustDto;
 import com.mong.mmbs.dto.response.ResponseDto;
+import com.mong.mmbs.dto.response.order.GiftGetResponseDto;
+import com.mong.mmbs.dto.response.order.GiftPatchResponseDto;
+import com.mong.mmbs.dto.response.order.OrderPostResponseDto;
 import com.mong.mmbs.entity.OrderEntity;
 import com.mong.mmbs.entity.ProductEntity;
+import com.mong.mmbs.entity.GiftEntity;
 import com.mong.mmbs.entity.OrderDetailEntity;
 
 @Service
 public class OrderService {
 
-  @Autowired
-  OrderRepository orderRepository;
-  @Autowired
-  OrderDetailRepository orderDetailRepository;
-  @Autowired
-  ProductRepository productRepository;
+  @Autowired OrderRepository orderRepository;
+  @Autowired OrderDetailRepository orderDetailRepository;
+  @Autowired ProductRepository productRepository;
+  @Autowired GiftRepository giftRepository;
 
-  public ResponseDto<?> orderInsert(OrderDto dto) {
+  public ResponseDto<OrderPostResponseDto> postOrder(OrderPostRequestDto dto) {
     
+    OrderPostResponseDto data = null;
+
     int productId = dto.getProductId();
-    ProductEntity product = null;
+    ProductEntity productEntity = null;
+
+    OrderEntity orderEntity = new OrderEntity(dto, productEntity);
+
+    OrderDetailEntity orderDetailEntity = new OrderDetailEntity(dto, orderEntity, productEntity);
 
     try {
 
-      product = productRepository.findByProductSeq(productId);
-      if (product == null)
-        return ResponseDto.setFailed("Does Not Exists Product");
+      productEntity = productRepository.findByProductSeq(productId);
+      if (productEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_ORDER_PRODUCT);
+
+      orderRepository.save(orderEntity);
+      orderDetailRepository.save(orderDetailEntity);
+
+      data = new OrderPostResponseDto(orderEntity, orderDetailEntity);
 
     } catch (Exception exception) {
-      return ResponseDto.setFailed("DataBase Error");
+      return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 
     }
 
     String guestPassword = dto.getOrderGuestPassword();
     String guestPasswordCheck = dto.getOrderGuestPasswordCheck();
 
-    if (guestPassword != null) {
+    String orderUserId = dto.getOrderUserId();
 
-      try {
+    if (orderUserId != null) return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
-        if (!guestPassword.equals(guestPasswordCheck))
-          return ResponseDto.setFailed("GuestPassword Does not match");
+    else {
 
-      } catch (Exception exception) {
-        return ResponseDto.setFailed("Exception Error");
+      if (guestPassword != null) {
+        try {
+  
+          if (!guestPassword.equals(guestPasswordCheck))
+            return ResponseDto.setFailed(ResponseMessage.NOT_MATCH_GUESTPASSWORD);
+  
+        } catch (Exception exception) {
+          return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+        }
+
+        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+
       }
-
-    }
-
-    OrderEntity order = new OrderEntity(dto, product);
-    System.out.println(order.toString());
-
-    try {
-
-      orderRepository.save(order);
-      
-    } catch (Exception exception) {
-      return ResponseDto.setFailed("DataBase Error");
-
-    }
-
-    OrderDetailEntity orderDetail = new OrderDetailEntity(dto, order, product);
-
-    try {
-
-      orderDetailRepository.save(orderDetail);
-
-    } catch (Exception exception) {
-      return ResponseDto.setFailed("DataBase Error");
-    }
-
-    return ResponseDto.setSuccess("result", orderDetail);
+		}
+    return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
   }
 
-  public ResponseDto<?> getList(String userId) {
+  public ResponseDto<?> getOrderList(String userId) {
 
 		List<OrderListResponseDto> result = new ArrayList<OrderListResponseDto>();
 		List<OrderEntity> orderList = new ArrayList<OrderEntity>();
@@ -95,17 +95,66 @@ public class OrderService {
 			orderList = orderRepository.findByOrderUserId(userId);
 
 			for ( OrderEntity order : orderList ) {
+
 				List<OrderDetailEntity> detailList = orderDetailRepository.findByOrderNumber(order.getOrderNumber());
 				OrderListResponseDto resultItem = new OrderListResponseDto(order, detailList);
-				result.add(resultItem);
+				
+        result.add(resultItem);
 
 			}
 
 		} catch(Exception exception){
-			return ResponseDto.setFailed("Database Error");
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-		return ResponseDto.setSuccess("Success", result);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, result);
     
+	}
+
+	public ResponseDto<GiftGetResponseDto> getGiftCode(int giftCode){
+
+		GiftGetResponseDto data = null;
+
+		List<GiftEntity> giftList = null;
+
+		try {
+
+			giftList = giftRepository.findAll();
+
+			data = new GiftGetResponseDto(giftList);
+
+		} catch (Exception exception) {
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+		}
+
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+
+	}
+	
+	public ResponseDto<GiftPatchResponseDto> patchGift(GiftPatchReqeustDto dto){
+
+		GiftPatchResponseDto data = null;
+
+		OrderEntity orderEntity = null;
+
+		int orderGiftCode = dto.getOrderGiftCode();
+		String orderNumber = dto.getOrderNumber();
+
+		try {
+
+			orderEntity = orderRepository.findByOrderNumber(orderNumber);
+			if (orderEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_ORDER);
+
+			orderEntity.setOrderGiftCode(orderGiftCode);
+			orderRepository.save(orderEntity);
+
+			data = new GiftPatchResponseDto();
+
+		} catch (Exception exception) {
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+		}
+
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+		
 	}
 }

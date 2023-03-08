@@ -1,4 +1,4 @@
-package com.mong.mmbs.dto.request.gift;
+package com.mong.mmbs.dto.request.order;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

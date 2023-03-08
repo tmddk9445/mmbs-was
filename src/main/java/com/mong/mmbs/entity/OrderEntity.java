@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.mong.mmbs.dto.OrderDto;
+import com.mong.mmbs.dto.request.order.OrderPostRequestDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -59,7 +59,7 @@ public class OrderEntity {
 //  배송 메세지
   private String orderShipMessage;
   
-  public OrderEntity(OrderDto dto, ProductEntity product) {
+  public OrderEntity(OrderPostRequestDto dto, ProductEntity product) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     
     this.orderNumber = UUID.randomUUID().toString();

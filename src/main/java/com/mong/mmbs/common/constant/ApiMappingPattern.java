@@ -6,4 +6,6 @@ public class ApiMappingPattern {
 
     public static final String CART = "/apis/cart";
 
+    public static final String ORDER = "/apis/order";
+
 }

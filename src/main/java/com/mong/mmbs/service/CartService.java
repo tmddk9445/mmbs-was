@@ -147,16 +147,16 @@ public class CartService {
 
     CartDeleteAllResponseDto data = null;
 
-		List<CartEntity> cartEntity = null;
+		List<CartEntity> cartList = new ArrayList<CartEntity>();
 		
 		try {
 
-			cartEntity = cartRepository.findByCartUserId(cartUserId);
-			if (cartEntity != null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_CART);
+			cartList = cartRepository.findByCartUserId(cartUserId);
+			if (cartList != null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_CART);
 
-			cartRepository.deleteAll(cartEntity);
+			cartRepository.deleteAll(cartList);
 
-			data = new CartDeleteAllResponseDto(cartEntity);
+			data = new CartDeleteAllResponseDto(cartList);
 
 		} catch (Exception exception) {
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);

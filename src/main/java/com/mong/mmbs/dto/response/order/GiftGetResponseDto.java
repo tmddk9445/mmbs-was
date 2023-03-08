@@ -1,4 +1,4 @@
-package com.mong.mmbs.dto.response.gift;
+package com.mong.mmbs.dto.response.order;
 
 import java.util.List;
 
@@ -12,5 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GiftGetResponseDto {
+
     List<GiftEntity> giftList;
+    
 }

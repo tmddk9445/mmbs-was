@@ -1,33 +1,59 @@
 package com.mong.mmbs.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mong.mmbs.dto.OrderDto;
+import com.mong.mmbs.common.constant.ApiMappingPattern;
+import com.mong.mmbs.dto.request.order.OrderPostRequestDto;
+import com.mong.mmbs.dto.request.order.GiftPatchReqeustDto;
 import com.mong.mmbs.dto.response.ResponseDto;
+import com.mong.mmbs.dto.response.order.GiftGetResponseDto;
+import com.mong.mmbs.dto.response.order.OrderGetListResponseDto;
+import com.mong.mmbs.dto.response.order.OrderPostResponseDto;
 import com.mong.mmbs.service.OrderService;
 
 @RestController
-@RequestMapping("/api/pay")
+@RequestMapping(ApiMappingPattern.ORDER)
 public class OrderContoller {
 
   @Autowired OrderService orderService;
+
+  public static final String ORDER_POST = "/"; 
+  public static final String ORDER_GET_LIST = "/"; 
+
+  public static final String GIFT_GET_GIFTCODE = "/{giftCode}";
+	public static final String GIFT_PATCH = "/";
   
-  @PostMapping("/orderInsert")
-  public ResponseDto<?> orderInsert(@RequestBody OrderDto requestBody){
-    System.out.println(requestBody.toString());
-    ResponseDto<?> result = orderService.orderInsert(requestBody);
+  @PostMapping(ORDER_POST)
+  public ResponseDto<OrderPostResponseDto> postOrder(@Valid @RequestBody OrderPostRequestDto requestBody){
+    ResponseDto<OrderPostResponseDto> result = orderService.postOrder(requestBody);
     return result;
   }
 
-  @GetMapping("/list")
-	public ResponseDto<?> getList(@AuthenticationPrincipal String userId) { 
-		return orderService.getList(userId);
+  @GetMapping(ORDER_GET_LIST)
+	public ResponseDto<?> getOrderList(@AuthenticationPrincipal String userId) { 
+		ResponseDto<?> result = orderService.getOrderList(userId);
+		return result;
 	}
   
+  @GetMapping(GIFT_GET_GIFTCODE)
+	public ResponseDto<GiftGetResponseDto> getGiftCode(@PathVariable("giftCode") int giftCode){
+		ResponseDto<GiftGetResponseDto> response = orderService.getGiftCode(giftCode);
+		return response;
+	}
+
+	@PatchMapping(GIFT_PATCH)
+	public ResponseDto<?> patchGift(@Valid @RequestBody GiftPatchReqeustDto requsetBody){
+		return orderService.patchGift(requsetBody);
+	}
+
 }

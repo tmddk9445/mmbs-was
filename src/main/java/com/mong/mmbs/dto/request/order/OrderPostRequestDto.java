@@ -1,4 +1,4 @@
-package com.mong.mmbs.dto;
+package com.mong.mmbs.dto.request.order;
 
 import javax.validation.constraints.NotBlank;
 
@@ -9,12 +9,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDto {
+public class OrderPostRequestDto {
+
 	private boolean orderUserWhether;
 	private String orderGuestPassword;
 	private String orderGuestPasswordCheck;
 	private String orderUserId;
 	private int orderGiftCode;
+	
 	@NotBlank
 	private String orderUserName;
 	@NotBlank
