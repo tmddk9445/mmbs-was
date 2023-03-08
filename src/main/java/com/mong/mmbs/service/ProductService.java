@@ -37,7 +37,7 @@ public class ProductService {
         return ResponseDto.setSuccess("성공", BastImage);
     }
 
-    public ResponseDto<?>dtlPage(int productSeq){
+    public ResponseDto<?> dtlPage(int productSeq){
 		
 		ProductEntity product=null;
 
@@ -50,7 +50,7 @@ public class ProductService {
 	}
 
 //	상세페이지 좋아요
-	public ResponseDto<?>dtllikePage(DtlLikepageDto dto ) {
+	public ResponseDto<?> dtllikePage(DtlLikepageDto dto ) {
 		int productSeq = dto.getProductSeq();
 		ProductEntity productEntity = null;
 		try {

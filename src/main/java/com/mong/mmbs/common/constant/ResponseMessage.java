@@ -20,5 +20,6 @@ public class ResponseMessage {
     public static final String NOT_MATCH_GUESTPASSWORD= "GuestPassword Does not match";
 
     public static final String NULL = "";
+    public static final String SLASH = "/";
 
 }

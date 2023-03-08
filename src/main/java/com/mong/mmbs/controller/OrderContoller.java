@@ -19,6 +19,7 @@ import com.mong.mmbs.dto.request.order.OrderPostRequestDto;
 import com.mong.mmbs.dto.request.order.GiftPatchReqeustDto;
 import com.mong.mmbs.dto.response.ResponseDto;
 import com.mong.mmbs.dto.response.order.GiftGetResponseDto;
+import com.mong.mmbs.dto.response.order.GiftPatchResponseDto;
 import com.mong.mmbs.dto.response.order.OrderGetListResponseDto;
 import com.mong.mmbs.dto.response.order.OrderPostResponseDto;
 import com.mong.mmbs.service.OrderService;
@@ -54,8 +55,9 @@ public class OrderContoller {
 	}
 
 	@PatchMapping(GIFT_PATCH)
-	public ResponseDto<?> patchGift(@Valid @RequestBody GiftPatchReqeustDto requsetBody){
-		return orderService.patchGift(requsetBody);
+	public ResponseDto<GiftPatchResponseDto> patchGift(@Valid @RequestBody GiftPatchReqeustDto requsetBody){
+		ResponseDto<GiftPatchResponseDto> response = orderService.patchGift(requsetBody);
+		return response;
 	}
 
 }
