@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class resetPasswordPostResponseDto {
+public class ResetPasswordPostResponseDto {
   // 아이디
   private String userId;
 //	비밀번호
@@ -34,7 +34,7 @@ public class resetPasswordPostResponseDto {
 //	탈퇴 날짜
 	private String userWithdraw;
 
-  public resetPasswordPostResponseDto(UserEntity userEntity) {
+  public ResetPasswordPostResponseDto(UserEntity userEntity) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
 		this.userId = userEntity.getUserId();

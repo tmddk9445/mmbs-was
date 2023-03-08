@@ -4,6 +4,8 @@ public class ApiMappingPattern {
 
     public static final String AUTH = "/apis/auth";
 
+    public static final String USER = "/apis/user";
+
     public static final String ASK = "/apis/ask";
 
     public static final String CART = "/apis/cart";

@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class findPasswordGetResponseDto {
+public class FindPasswordGetResponseDto {
   
   private String userPassword;
 
-  public findPasswordGetResponseDto(UserEntity userEntity) {
+  public FindPasswordGetResponseDto(UserEntity userEntity) {
 		this.userPassword = userEntity.getUserId();
 		
 	}

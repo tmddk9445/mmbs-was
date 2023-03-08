@@ -11,9 +11,9 @@ import com.mong.mmbs.dto.request.auth.resetPasswordPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
 import com.mong.mmbs.dto.response.auth.SignInGetResponseDto;
 import com.mong.mmbs.dto.response.auth.SignUpPostResponseDto;
-import com.mong.mmbs.dto.response.auth.findIdGetResponseDto;
-import com.mong.mmbs.dto.response.auth.findPasswordGetResponseDto;
-import com.mong.mmbs.dto.response.auth.resetPasswordPostResponseDto;
+import com.mong.mmbs.dto.response.auth.FindIdGetResponseDto;
+import com.mong.mmbs.dto.response.auth.FindPasswordGetResponseDto;
+import com.mong.mmbs.dto.response.auth.ResetPasswordPostResponseDto;
 import com.mong.mmbs.entity.RecommendEntity;
 import com.mong.mmbs.entity.UserEntity;
 import com.mong.mmbs.repository.RecommendRepository;
@@ -88,9 +88,9 @@ public class AuthService {
 
   }
 
-  public ResponseDto<findIdGetResponseDto> findId(String userEmail, String userName) {
+  public ResponseDto<FindIdGetResponseDto> findId(String userEmail, String userName) {
 
-    findIdGetResponseDto data = null;
+    FindIdGetResponseDto data = null;
 
     try {
 
@@ -98,7 +98,7 @@ public class AuthService {
 
       if (userEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_DATA);
 
-      data = new findIdGetResponseDto(userEntity.getUserId());
+      data = new FindIdGetResponseDto(userEntity.getUserId());
 
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -109,9 +109,9 @@ public class AuthService {
 
   }
 
-  public ResponseDto<findPasswordGetResponseDto> findPassword(String userId, String userName, String userEmail) {
+  public ResponseDto<FindPasswordGetResponseDto> findPassword(String userId, String userName, String userEmail) {
 
-    findPasswordGetResponseDto data = null;
+    FindPasswordGetResponseDto data = null;
 
     try {
 
@@ -119,7 +119,7 @@ public class AuthService {
     
       if (userEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_DATA);
 
-      data = new findPasswordGetResponseDto(userEntity.getUserPassword());
+      data = new FindPasswordGetResponseDto(userEntity.getUserPassword());
 
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -129,9 +129,9 @@ public class AuthService {
     return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
   }
 
-  public ResponseDto<resetPasswordPostResponseDto> resetPassword(resetPasswordPostRequestDto dto) {
+  public ResponseDto<ResetPasswordPostResponseDto> resetPassword(resetPasswordPostRequestDto dto) {
 
-    resetPasswordPostResponseDto data = null;
+    ResetPasswordPostResponseDto data = null;
 
     String userId = dto.getUserId();
     String password = dto.getUserPassword();
@@ -148,7 +148,7 @@ public class AuthService {
       userEntity.setUserPassword(encodedPassword);
       userRepository.save(userEntity);
 
-      data = new resetPasswordPostResponseDto(userEntity);
+      data = new ResetPasswordPostResponseDto(userEntity);
 
     } catch (Exception exception) {
       exception.printStackTrace();
