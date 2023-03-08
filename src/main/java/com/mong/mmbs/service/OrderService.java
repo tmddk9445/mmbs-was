@@ -13,11 +13,11 @@ import com.mong.mmbs.repository.ProductRepository;
 
 import com.mong.mmbs.dto.request.order.OrderPostRequestDto;
 import com.mong.mmbs.common.constant.ResponseMessage;
-import com.mong.mmbs.dto.OrderListResponseDto;
 import com.mong.mmbs.dto.request.order.GiftPatchReqeustDto;
 import com.mong.mmbs.dto.response.ResponseDto;
 import com.mong.mmbs.dto.response.order.GiftGetResponseDto;
 import com.mong.mmbs.dto.response.order.GiftPatchResponseDto;
+import com.mong.mmbs.dto.response.order.OrderGetListResponseDto;
 import com.mong.mmbs.dto.response.order.OrderPostResponseDto;
 import com.mong.mmbs.entity.OrderEntity;
 import com.mong.mmbs.entity.ProductEntity;
@@ -85,9 +85,9 @@ public class OrderService {
 
   }
 
-  public ResponseDto<?> getOrderList(String userId) {
+  public ResponseDto<List<OrderGetListResponseDto>> getOrderList(String userId) {
 
-		List<OrderListResponseDto> result = new ArrayList<OrderListResponseDto>();
+		List<OrderGetListResponseDto> data = new ArrayList<OrderGetListResponseDto>();
 		List<OrderEntity> orderList = new ArrayList<OrderEntity>();
 
 		try {
@@ -97,9 +97,9 @@ public class OrderService {
 			for ( OrderEntity order : orderList ) {
 
 				List<OrderDetailEntity> detailList = orderDetailRepository.findByOrderNumber(order.getOrderNumber());
-				OrderListResponseDto resultItem = new OrderListResponseDto(order, detailList);
+				OrderGetListResponseDto resultItem = new OrderGetListResponseDto(order, detailList);
 				
-        result.add(resultItem);
+				data.add(resultItem);
 
 			}
 
@@ -107,7 +107,7 @@ public class OrderService {
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, result);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
     
 	}
 

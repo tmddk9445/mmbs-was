@@ -34,28 +34,18 @@ public class AuthService {
     
     public ResponseDto<SignUpPostResponseDto> signUp(SignUpRequestDto dto) {
 
-        //# description: 검증 프로세스 //
-
-        //# description: 아이디 중복 검증 //
         String userId = dto.getUserId();
- 
-        if (userRepository.existsById(userId))
-            return ResponseDto.setFailed(ResponseMessage.EXIST_DATA);
+        if (userRepository.existsById(userId)) return ResponseDto.setFailed(ResponseMessage.EXIST_DATA);
 
-        //# description: 이메일 중복 검증 //
         String userEmail = dto.getUserEmail();
-
-        if (userRepository.existsByUserEmail(userEmail))
+        if (userRepository.existsByUserEmail(userEmail)) 
             return ResponseDto.setFailed(ResponseMessage.EXIST_DATA);
 
-        //# description: 비밀번호가 서로 같은지 검증 //
         String userPassword = dto.getUserPassword();
         String userPasswordCheck = dto.getUserPasswordCheck();
 
-        if (!userPassword.equals(userPasswordCheck))
+        if (!userPassword.equals(userPasswordCheck)) 
             return ResponseDto.setFailed(ResponseMessage.NOT_MATCH_PASSWORD);
-
-        //# description: 필수값 모두 입력 됐는지 검증 //
 
         //# description: 실제 프로세스 //
 
@@ -65,7 +55,7 @@ public class AuthService {
         if (recommendedUserId != null && !recommendedUserId.isEmpty()) {
 
             //# description: 추천인 존재 여부 검증 //
-            if (!userRepository.existsById(recommendedUserId))
+            if (!userRepository.existsById(recommendedUserId)) 
                 return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 
             //# description: Entity 생성 //
@@ -79,7 +69,6 @@ public class AuthService {
                 return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
             }
             
-
             return ResponseDto.setSuccess(ResponseMessage.SUCCESS, null);
         }
         

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mong.mmbs.common.constant.ApiMappingPattern;
 import com.mong.mmbs.dto.FindIdDto;
 import com.mong.mmbs.dto.FindPasswordDto;
 import com.mong.mmbs.dto.MailDto;
@@ -25,7 +26,7 @@ import com.mong.mmbs.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/apis/auth")
+@RequestMapping(ApiMappingPattern.AUTH)
 @Slf4j
 public class AuthController {
 	
@@ -33,32 +34,38 @@ public class AuthController {
 	@Autowired UserService userUpdateService;
 	@Autowired MemberService memberService;
 	@Autowired MailService mailService;
+
+  private static final String POST_SIGN_UP = "/signUp";
+  private static final String POST_FIND_ID = "/findId";
+  private static final String POST_FIND_PASSWORD = "/findPassword";
+  private static final String POST_RESET_PASSWORD = "/resetPassword";
+  private static final String POST_SIGN_IN = "/signIn";
 	
-	@PostMapping("/signUp")
+	@PostMapping(POST_SIGN_UP)
 	public ResponseDto<SignUpPostResponseDto> signUp(@RequestBody SignUpRequestDto requestBody) {
 		ResponseDto<SignUpPostResponseDto> result = authService.signUp(requestBody);
 		return result;
 	}
 
-	@PostMapping("/findId")
+	@PostMapping(POST_FIND_ID)
 	public ResponseDto<?> findId(@RequestBody FindIdDto requestBody){
 		ResponseDto<?> result = authService.findId(requestBody);
 		return result;
 	}
 
-	@PostMapping("/findPassword")
+	@PostMapping(POST_FIND_PASSWORD)
 	public ResponseDto<?> findPassword(@RequestBody FindPasswordDto requestBody){
 		ResponseDto<?> result = authService.findPassword(requestBody);
 		return result;
 	}
 
-	@PostMapping("/resetPassword")
+	@PostMapping(POST_RESET_PASSWORD)
 	public ResponseDto<?> resetPassword(@RequestBody ResetPasswordDto requestBody){
 		ResponseDto<?> result = authService.resetPassword(requestBody);
 		return result;
 	}
 
-	@PostMapping("/signIn")
+	@PostMapping(POST_SIGN_IN)
 	public ResponseDto<SignInResponseDto> signIn(@RequestBody SignInDto requestBody) {
 		ResponseDto<SignInResponseDto> result = authService.signIn(requestBody);
 		return result;

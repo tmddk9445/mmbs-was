@@ -15,16 +15,22 @@ public class UserService {
 	@Autowired UserRepository userRepository;
 	
     public ResponseDto<?> getUser(String userId) {
+
     	UserEntity user = null;
+
     	try {
+
     		user = userRepository.findByUserId(userId);
+
     	} catch (Exception exception) {
+        exception.printStackTrace();
     		return ResponseDto.setFailed("Database Error");
     	}
     	
     	if (user != null) user.setUserPassword("");
-    	
-    	return ResponseDto.setSuccess("result", user);
+
+      return ResponseDto.setSuccess("result", user);
+    
     }
     
 	public ResponseDto<?> userUpdate(UserUpdateDto dto){
@@ -32,21 +38,28 @@ public class UserService {
 		UserEntity user = null;
 		
 		try {
+
 			user = userRepository.findByUserId(dto.getUserId());
-			if (user == null) ResponseDto.setFailed("Does Not Exist User");
+			if (user == null) return ResponseDto.setFailed("Does Not Exist User");
+
 		} catch (Exception exception) {
+      exception.printStackTrace();
 			ResponseDto.setFailed("Failed");
 		}
 		
 		user.setUpdateUser(dto);
 		
 		try {
+
 			userRepository.save(user);
+
 		} catch (Exception exception) {
+      exception.printStackTrace();
 			ResponseDto.setFailed("Failed");
 		}
 		
 		return ResponseDto.setSuccess("Sucess", user);
+
 	}
 
 	public ResponseDto<?> userDelete (String userId, UserDeleteDto dto) {
@@ -57,15 +70,19 @@ public class UserService {
 		UserEntity userEntity = null; 
 
 		try {
+
 			if(!userRepository.existsByUserIdAndUserEmail(userId, userEmail))
 				return ResponseDto.setFailed("UserId Or UserEmail Does Not Exist");
 				
 			userEntity = userRepository.findByUserId(userId);
 			userRepository.delete(userEntity);
+
 		} catch (Exception exception) {
 			exception.printStackTrace();
 			return ResponseDto.setFailed("Failed");
 		}
+
 		return ResponseDto.setSuccess("Success", null);
-	}
+	
+  }
 }

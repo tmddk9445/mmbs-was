@@ -1,5 +1,7 @@
 package com.mong.mmbs.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +41,9 @@ public class OrderContoller {
     return result;
   }
 
-  @GetMapping(ORDER_GET_LIST)
-	public ResponseDto<?> getOrderList(@AuthenticationPrincipal String userId) { 
-		ResponseDto<?> result = orderService.getOrderList(userId);
+  @GetMapping(ORDER_GET_LIST) // OrderGetListResponseDto
+	public ResponseDto<List<OrderGetListResponseDto>> getOrderList(@AuthenticationPrincipal String userId) { 
+		ResponseDto<List<OrderGetListResponseDto>> result = orderService.getOrderList(userId);
 		return result;
 	}
   
