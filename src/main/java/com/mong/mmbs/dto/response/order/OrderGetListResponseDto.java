@@ -10,11 +10,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class OrderGetListResponseDto {
 
-  private OrderEntity order;
+  private OrderEntity orderEntity;
   private List<OrderDetailEntity> orderDetailList;
-  
+
 }
