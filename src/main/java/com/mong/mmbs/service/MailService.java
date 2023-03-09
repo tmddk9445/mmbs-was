@@ -52,4 +52,5 @@ public class MailService {
 
         log.info("메일 전송 완료");
     }
+    
 }
