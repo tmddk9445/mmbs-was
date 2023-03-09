@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mong.mmbs.common.constant.ResponseMessage;
-import com.mong.mmbs.dto.DtlLikepageDto;
-import com.mong.mmbs.dto.request.product.ProductSearchPostRequestDto;
+import com.mong.mmbs.dto.request.product.ProductLikePostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
-import com.mong.mmbs.dto.response.product.ProductSearchPostResponseDto;
+import com.mong.mmbs.dto.response.product.BestSellerGetResponseDto;
+import com.mong.mmbs.dto.response.product.ProductDetailGetProductSeqResponseDto;
+import com.mong.mmbs.dto.response.product.ProductLikePostResponseDto;
+import com.mong.mmbs.dto.response.product.ProductSearchGetResponseDto;
+import com.mong.mmbs.dto.response.product.RandomProductImageGetResponseDto;
 import com.mong.mmbs.entity.ProductEntity;
 import com.mong.mmbs.repository.ProductRepository;
 
@@ -18,19 +21,41 @@ public class ProductService {
     
     @Autowired ProductRepository productRepository;
 
-    public ResponseDto<ProductSearchPostResponseDto> searchPostProduct(ProductSearchPostRequestDto dto) {
+	public ResponseDto<ProductLikePostResponseDto> postPoductLike(ProductLikePostRequestDto dto) {
 
-        ProductSearchPostResponseDto data = null;
+        ProductLikePostResponseDto data = null;
+		int productSeq = dto.getProductSeq();
 
-        String productTitle = dto.getProductTitle();
+		try {
+
+			ProductEntity productEntity = productRepository.findByProductSeq(productSeq);
+            productEntity.setProductLike(productEntity.getProductLike() + 1);
+
+            productRepository.save(productEntity);
+
+            data = new ProductLikePostResponseDto(productEntity);
+
+		} catch (Exception exception) {
+            exception.printStackTrace();
+			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+		}
+
+        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+		
+	}
+
+    public ResponseDto<ProductSearchGetResponseDto> getProductSearch(String productTitle) {
+
+        ProductSearchGetResponseDto data = null;
 
         try {
 
             List<ProductEntity> productList = productRepository.findByProductTitleContaining(productTitle);
 
-            data = new ProductSearchPostResponseDto(productList);
+            data = new ProductSearchGetResponseDto(productList);
 
         } catch (Exception exception) {
+            exception.printStackTrace();
             return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
         }
 
@@ -38,77 +63,59 @@ public class ProductService {
         
     }
 
-    public ResponseDto<?> bestSeller (){
+    public ResponseDto<BestSellerGetResponseDto> getBestSeller() {
+
+        BestSellerGetResponseDto data = null;
 
         try {
 
-            List<ProductEntity> ProductBest = productRepository.findTop10ByOrderByProductLikeDesc();
+            List<ProductEntity> bestSellerList = productRepository.findTop10ByOrderByProductLikeDesc();
+
+            data = new BestSellerGetResponseDto(bestSellerList);
 
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
         }
         
-        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, null);
+        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+
     }
 
-    public ResponseDto<?> mainImage(){
+    public ResponseDto<RandomProductImageGetResponseDto> getRandomProductImage(){
 
-        List<ProductEntity> BastImage = null;
-
+        RandomProductImageGetResponseDto data = null;
         try {
 
-            BastImage = productRepository.findAll();
+            List<ProductEntity> randomProductImageList = productRepository.findAll();
+            
+            data = new RandomProductImageGetResponseDto(randomProductImageList);
 
         } catch (Exception exception) {
+            exception.printStackTrace();
             return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
         }
 
-        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, BastImage);
+        return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
     }
 
-    public ResponseDto<?> dtlPage(int productSeq){
+    public ResponseDto<ProductDetailGetProductSeqResponseDto> getProductDetailPage(int productSeq){
 		
-		ProductEntity product=null;
+        ProductDetailGetProductSeqResponseDto data = null;
 
 		try {
 
-			product=productRepository.findByProductSeq(productSeq);
+			ProductEntity productEntity = productRepository.findByProductSeq(productSeq);
+
+            data = new ProductDetailGetProductSeqResponseDto(productEntity);
 
 		} catch (Exception exception) {
+            exception.printStackTrace();
 			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
 		}
 
-		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, product);
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
-	}
-
-//	상세페이지 좋아요
-	public ResponseDto<?> dtllikePage(DtlLikepageDto dto ) {
-
-		int productSeq = dto.getProductSeq();
-		ProductEntity productEntity = null;
-
-		try {
-
-			productEntity = productRepository.findByProductSeq(productSeq);
-
-		} catch (Exception exception) {
-			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
-		}
-
-		productEntity.setProductLike(productEntity.getProductLike() + 1);
-
-		try {
-
-			productRepository.save(productEntity);
-
-		} catch (Exception exception) {
-			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
-		}
-
-		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, null);
-		
 	}
 
 }

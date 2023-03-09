@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductSearchPostResponseDto {
+public class RandomProductImageGetResponseDto {
+  
+  List<ProductEntity> randomProductImageList;
 
-  List<ProductEntity> productList;
 }
