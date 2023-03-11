@@ -6,6 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mong.mmbs.common.constant.ResponseMessage;
+import com.mong.mmbs.common.util.UserUtil;
+import com.mong.mmbs.dto.request.auth.SendPasswordEmailRequestDto;
 import com.mong.mmbs.dto.request.auth.SignUpRequestDto;
 import com.mong.mmbs.dto.request.auth.resetPasswordPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
@@ -23,12 +25,12 @@ import com.mong.mmbs.security.TokenProvider;
 @Service
 public class AuthService {
 
-  @Autowired
-  UserRepository userRepository;
-  @Autowired
-  RecommendRepository recommendRepository;
-  @Autowired
-  TokenProvider tokenProvider;
+  @Autowired TokenProvider tokenProvider;
+
+  @Autowired MailService mailService;
+
+  @Autowired UserRepository userRepository;
+  @Autowired RecommendRepository recommendRepository;
 
   private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -185,6 +187,31 @@ public class AuthService {
 
     return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
+  }
+
+  public ResponseDto<Boolean> sendPasswordEmail(SendPasswordEmailRequestDto dto) {
+
+    String userEmail = dto.getUserEmail();
+
+    try {
+      UserEntity userEntity = userRepository.findByUserEmail(userEmail);
+      if (userEmail == null) return ResponseDto.setFailed(null);
+
+      String temporaryPassword = UserUtil.getTemporaryPassword();
+      String encodedPassword = passwordEncoder.encode(temporaryPassword);
+
+      userEntity.setUserPassword(encodedPassword);
+      userRepository.save(userEntity);
+
+      boolean successedSendMail = mailService.sendPasswordEmail(temporaryPassword, userEmail);
+		  if (!successedSendMail) return ResponseDto.setFailed("");
+
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      return ResponseDto.setFailed(null);
+    }
+
+		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, true);
   }
 
 }

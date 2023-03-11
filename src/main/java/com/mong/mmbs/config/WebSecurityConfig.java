@@ -35,7 +35,7 @@ public class WebSecurityConfig {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			// '/', '/api/auth' 모듈에 대해서는 모두 허용 (인증을 하지 않고 사용 가능하게 함) //// 실제 구현되는 곳 //// request와 관련된 인증의 규칙을 만드는 것 
 
-			.authorizeRequests().antMatchers("/", "/api/auth/**", "/api/book/**", "/api/paymentInfo/**", "/api/orderInfo/**", "/api/orderPayment/**","/api/dtl/**","/api/best/**","/api/gift/**","/api/Image/**","/api/serch**", "/api/pay/**", "/api/searchEmail/**", "/sendPwd/**" ).permitAll() 
+			.authorizeRequests().antMatchers("/", "/apis/auth/**", "/api/book/**", "/api/paymentInfo/**", "/api/orderInfo/**", "/api/orderPayment/**","/api/dtl/**","/api/best/**","/api/gift/**","/api/Image/**","/api/serch**", "/api/pay/**", "/api/searchEmail/**", "/sendPwd/**" ).permitAll() 
 
 			// 나머지 Request에 대해서는 모두 인증된 사용자만 사용가능하게 함 (인증을 해야만 사용가능!)
 			.anyRequest().authenticated();
