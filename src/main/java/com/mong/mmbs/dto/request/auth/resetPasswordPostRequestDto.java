@@ -10,8 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class resetPasswordPostRequestDto {
+	@NotBlank
 	private String userId;
 	@NotBlank
 	private String userPassword;
+	@NotBlank
 	private String userPasswordCheck;
 }

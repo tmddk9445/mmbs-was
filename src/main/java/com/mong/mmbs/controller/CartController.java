@@ -42,14 +42,14 @@ public class CartController {
     public static final String CART_DELETE_CARTUSERID = "/{cartUserId}";
 
 	@PostMapping(CART_POST)
-	public ResponseDto<CartPostResponseDto> post(@Valid @RequestBody CartPostRequestDto requestBody){
-		ResponseDto<CartPostResponseDto> result = cartService.post(requestBody);
+	public ResponseDto<CartPostResponseDto> post(@AuthenticationPrincipal String userId, @Valid @RequestBody CartPostRequestDto requestBody){
+		ResponseDto<CartPostResponseDto> result = cartService.post(userId, requestBody);
 		return result;
 	}
 
 	@GetMapping(CART_GET)
-	public ResponseDto<CartGetResponseDto> get(@AuthenticationPrincipal String userid){
-		ResponseDto<CartGetResponseDto> result = cartService.get(userid);
+	public ResponseDto<CartGetResponseDto> get(@AuthenticationPrincipal String userId){
+		ResponseDto<CartGetResponseDto> result = cartService.get(userId);
 		return result;
 	}
 

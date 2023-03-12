@@ -27,11 +27,11 @@ public class CartService {
 	@Autowired
 	ProductRepository productRepository;
 
-	public ResponseDto<CartPostResponseDto> post(CartPostRequestDto dto) {
+	public ResponseDto<CartPostResponseDto> post(String userId, CartPostRequestDto dto) {
 
 		CartPostResponseDto data = null;
 
-		String cartUserId = dto.getCartUserId();
+		String cartUserId = userId;
 		int cartProductId = dto.getCartProductId();
 		int cartProductAmount = dto.getCartProductAmount();
 
@@ -45,7 +45,7 @@ public class CartService {
       if (cartEntity == null) {
 
         try {
-          cartEntity = new CartEntity(dto, productEntity);
+          cartEntity = new CartEntity(userId, dto, productEntity);
           cartRepository.save(cartEntity);
   
         } catch (Exception exception) {

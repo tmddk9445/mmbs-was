@@ -35,8 +35,8 @@ public class OrderPostRequestDto {
 
 	@NotBlank
 	private int productId;
-  	@NotBlank
-  	private int orderCount;
+  @NotBlank
+  private int orderCount;
 
 	public boolean getOrderUserWhether() {
 		return this.orderUserWhether;

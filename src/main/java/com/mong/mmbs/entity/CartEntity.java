@@ -37,8 +37,8 @@ public class CartEntity {
 //  제품 개수
 	private int cartProductAmount;
 	
-	public CartEntity(CartPostRequestDto dto, ProductEntity product) {
-		this.cartUserId = dto.getCartUserId();
+	public CartEntity(String userId, CartPostRequestDto dto, ProductEntity product) {
+		this.cartUserId = userId;
 		this.cartProductId = product.getProductSeq();
 		this.cartProductName = product.getProductTitle();
 		this.cartProductImage = product.getProductImageUrl();

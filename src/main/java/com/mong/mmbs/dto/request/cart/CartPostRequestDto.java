@@ -1,6 +1,6 @@
 package com.mong.mmbs.dto.request.cart;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CartPostRequestDto {
 
-	@NotBlank
-	private String cartUserId;
-	@NotBlank
+	@NotNull
 	private int cartProductId;
-	@NotBlank
+	@NotNull
 	private int cartProductAmount;
 
 }
