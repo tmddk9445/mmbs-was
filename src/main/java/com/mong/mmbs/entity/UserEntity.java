@@ -56,7 +56,7 @@ public class UserEntity {
 		this.userSignUpDate = dateFormat.format(new Date());
 	}
 	
-	public void setUpdateUser(UserPatchRequestDto dto) {
+	public void setPatchUser(UserPatchRequestDto dto) {
 		
 		this.userAddress = dto.getUserAddress();
 		this.userAddressDetail =dto.getUserAddressDetail();

@@ -50,7 +50,7 @@ public class UserService {
       if (userEntity == null)
         return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_USER);
 
-      userEntity.setUpdateUser(dto);
+      userEntity.setPatchUser(dto);
       userRepository.save(userEntity);
 
       data = new UserPatchResponseDto(userEntity);

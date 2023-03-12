@@ -23,4 +23,5 @@ public class UserPatchRequestDto {
 	@NotBlank
 	private String userAddressDetail;
 	private String userKidBirth;
+
 }
