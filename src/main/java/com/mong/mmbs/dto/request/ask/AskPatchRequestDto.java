@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class AskPatchRequestDto {
-    @NotBlank
+
     private int askId;
     @NotBlank
     private String askWriter;
-    @NotBlank
-    private String askSort;
+
+    private int askSort;
     @NotBlank
     private String askTitle;
     @NotBlank

@@ -32,9 +32,8 @@ public class AskEntity {
 //  작성자 아이디 (참조)
 	@NotBlank
 	private String askWriter;
-//  문의 카테고리
-	@NotBlank
-	private String askSort;
+//  문의 카테고리 [-1: 제품 문의, 0: 배송 문의, 1: 기타 문의]
+	private int askSort;
 // 	문의 제목
 	@NotBlank
 	private String askTitle;
@@ -43,20 +42,20 @@ public class AskEntity {
 	private String askContent;
 //  문의 날짜
 	private String askDatetime;
-//  문의 상태
-	private String askStatus;
+//  문의 상태 [-1: 삭제, 0: 문의 접수, 1: 답변완료 상태]
+	private int askStatus;
 //  문의 답변
     private String askReply;
 
-	public AskEntity(AskPostRequestDto dto){
+	public AskEntity(AskPostRequestDto dto, String userId){
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		
-		this.askWriter = dto.getAskWriter();
+		this.askWriter = userId;
 		this.askSort = dto.getAskSort();
 		this.askTitle = dto.getAskTitle();
 		this.askContent = dto.getAskContent();
 		this.askDatetime = dateFormat.format(new Date());
-		this.askStatus = "문의 접수";
+		this.askStatus = 0;
 	}
 
 	public void patch(AskPatchRequestDto dto) {

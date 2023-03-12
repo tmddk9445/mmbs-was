@@ -121,12 +121,11 @@ public class AuthService {
 
     String userId = dto.getUserId();
     String password = dto.getUserPassword();
-    String password2 = dto.getUserPassword2();
+    String passwordCheck = dto.getUserPasswordCheck();
 
     try {
 
-      if (!password.equals(password2))
-        return ResponseDto.setFailed(ResponseMessage.NOT_MATCH_PASSWORD);
+      if (!password.equals(passwordCheck)) return ResponseDto.setFailed(ResponseMessage.NOT_MATCH_PASSWORD);
 
       UserEntity userEntity = userRepository.findByUserId(userId);
 

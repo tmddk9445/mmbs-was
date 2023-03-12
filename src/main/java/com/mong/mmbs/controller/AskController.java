@@ -35,15 +35,15 @@ public class AskController {
 
   public static final String ASK_GET_LIST = "/list";
   public static final String ASK_GET_ASKID = "/{askId}";
-  public static final String ASK_GET_FIND = "/{askStatus}/{askDatetime}/{askSort}";
+  public static final String ASK_GET_FIND = "/{askStatus}/{months}/{askSort}";
 
   public static final String ASK_PATCH = "/";
 
   public static final String ASK_DELETE_ASKID = "/{askId}";
 
   @PostMapping(ASK_POST)
-  public ResponseDto<AskPostResponseDto> post(@Valid @RequestBody AskPostRequestDto requestBody) {
-    ResponseDto<AskPostResponseDto> result = askService.post(requestBody);
+  public ResponseDto<AskPostResponseDto> post(@Valid @RequestBody AskPostRequestDto requestBody, @AuthenticationPrincipal String userId) {
+    ResponseDto<AskPostResponseDto> result = askService.post(requestBody, userId);
     return result;
   }
   
@@ -53,16 +53,16 @@ public class AskController {
 		return result;
 	}
 
+  @GetMapping(ASK_GET_FIND)
+  public ResponseDto<AskGetFindResponseDto> find(@AuthenticationPrincipal String userId, @PathVariable("askStatus") int askStatus, @PathVariable("months") int months, @PathVariable("askSort") int askSort) {
+      ResponseDto<AskGetFindResponseDto> result = askService.find(userId, askStatus, months, askSort);
+      return result;
+  }
+
   @GetMapping(ASK_GET_ASKID)
   public ResponseDto<AskGetAskIdResponseDto> get(@PathVariable("askId") int askId) {
     ResponseDto<AskGetAskIdResponseDto> result = askService.get(askId);
     return result;
-  }
-
-  @GetMapping(ASK_GET_FIND)
-  public ResponseDto<AskGetFindResponseDto> find(@AuthenticationPrincipal String userId, @PathVariable("askStatus") String askStatus, @PathVariable("months") int months, @PathVariable("askSort") String askSort) {
-      ResponseDto<AskGetFindResponseDto> result = askService.find(userId, askStatus, months, askSort);
-      return result;
   }
   
   @PatchMapping(ASK_PATCH)

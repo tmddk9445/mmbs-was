@@ -27,14 +27,13 @@ public class AskService {
 
   @Autowired AskRepository askRepository;
 
-  // 문의 작성
-  public ResponseDto<AskPostResponseDto> post(AskPostRequestDto dto){
+  public ResponseDto<AskPostResponseDto> post(AskPostRequestDto dto, String userId){
 
     AskPostResponseDto data = null;
 
 		try {
 
-      AskEntity askEntity = new AskEntity(dto);
+      AskEntity askEntity = new AskEntity(dto, userId);
 			askRepository.save(askEntity);
 
       data = new AskPostResponseDto(askEntity);
@@ -48,7 +47,6 @@ public class AskService {
 
 	}
 
-  // 문의 리스트 출력
   public ResponseDto<AskGetListResponseDto> getList(String userId) {
 
 	  AskGetListResponseDto data = null;
@@ -67,8 +65,31 @@ public class AskService {
 		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
 
 	}
-	
-  // 수정할 문의 출력
+
+	public ResponseDto<AskGetFindResponseDto> find(String userId, int askStatus, int months, int askSort) {
+    
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    Date date = Date.from(Instant.now().minus(months * 30, ChronoUnit.DAYS));
+    String askDateTime = simpleDateFormat.format(date);
+
+		AskGetFindResponseDto data = null;
+    
+		try {
+
+      List<AskEntity> askList
+        = askRepository.findByAskWriterAndAskDatetimeGreaterThanEqualAndAskSortAndAskStatusOrderByAskDatetimeDesc(userId ,askDateTime, askStatus, askSort);
+
+      data = new AskGetFindResponseDto(askList);
+
+    } catch(Exception exception){
+      exception.printStackTrace();
+      return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
+    }
+
+    return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
+		
+  }
+
 	public ResponseDto<AskGetAskIdResponseDto> get(int askId){
 		
     AskGetAskIdResponseDto data = null;
@@ -88,30 +109,6 @@ public class AskService {
 
 	}
 
-  // 문의 검색
-  public ResponseDto<AskGetFindResponseDto> find(String userId, String askStatus, int months, String askSort) {
-
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = Date.from(Instant.now().minus(months * 30, ChronoUnit.DAYS));
-		String askDateTime = simpleDateFormat.format(date);
-
-    AskGetFindResponseDto data = null;
-
-		try {
-
-			List<AskEntity> askList = askRepository.findByAskWriterAndAskDatetimeGreaterThanEqualAndAskSortContainsAndAskStatusContainsOrderByAskDatetimeDesc(userId, askDateTime, askSort, askStatus);
-      data = new AskGetFindResponseDto(askList);
-
-		} catch(Exception exception){
-			exception.printStackTrace();
-			return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
-		}
-
-		return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
-	
-	}
-
-  // 문의 수정
 	public ResponseDto<AskPatchResponseDto> patch(AskPatchRequestDto dto) {
 
     AskPatchResponseDto data = null;

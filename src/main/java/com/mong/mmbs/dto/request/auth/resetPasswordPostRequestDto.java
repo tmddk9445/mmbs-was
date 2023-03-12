@@ -13,5 +13,5 @@ public class resetPasswordPostRequestDto {
 	private String userId;
 	@NotBlank
 	private String userPassword;
-	private String userPassword2;
+	private String userPasswordCheck;
 }

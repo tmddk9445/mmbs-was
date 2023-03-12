@@ -16,6 +16,6 @@ public interface AskRepository extends JpaRepository<AskEntity, Integer>{
 
   public AskEntity deleteByAskId(int askId);
 
-  public List<AskEntity> findByAskWriterAndAskDatetimeGreaterThanEqualAndAskSortContainsAndAskStatusContainsOrderByAskDatetimeDesc(String userId, String askDatetime, String askSort, String askStatus);
+  public List<AskEntity> findByAskWriterAndAskDatetimeGreaterThanEqualAndAskSortAndAskStatusOrderByAskDatetimeDesc(String userId, String askDatetime,int askStatus, int askSort);
 
 }

@@ -8,12 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class AskPostRequestDto {
-  @NotBlank
-	private String askWriter;
-  @NotBlank
-  private String askSort;
+
+  private int askSort;
   @NotBlank
   private String askTitle;
   @NotBlank
 	private String askContent;
+  
 }
