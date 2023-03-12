@@ -8,16 +8,14 @@ import org.springframework.stereotype.Service;
 import com.mong.mmbs.common.constant.ResponseMessage;
 import com.mong.mmbs.common.util.UserUtil;
 import com.mong.mmbs.dto.request.auth.FindIdRequestDto;
-import com.mong.mmbs.dto.request.auth.FindPasswordRequestDto;
 import com.mong.mmbs.dto.request.auth.SendPasswordEmailRequestDto;
 import com.mong.mmbs.dto.request.auth.SignInRequestDto;
 import com.mong.mmbs.dto.request.auth.SignUpRequestDto;
 import com.mong.mmbs.dto.request.auth.resetPasswordPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
-import com.mong.mmbs.dto.response.auth.SignInGetResponseDto;
+import com.mong.mmbs.dto.response.auth.SignInPostResponseDto;
 import com.mong.mmbs.dto.response.auth.SignUpPostResponseDto;
-import com.mong.mmbs.dto.response.auth.FindIdGetResponseDto;
-import com.mong.mmbs.dto.response.auth.FindPasswordGetResponseDto;
+import com.mong.mmbs.dto.response.auth.FindIdPostResponseDto;
 import com.mong.mmbs.dto.response.auth.ResetPasswordPostResponseDto;
 import com.mong.mmbs.entity.RecommendEntity;
 import com.mong.mmbs.entity.UserEntity;
@@ -93,9 +91,9 @@ public class AuthService {
 
   }
 
-  public ResponseDto<FindIdGetResponseDto> findId(FindIdRequestDto dto) {
+  public ResponseDto<FindIdPostResponseDto> findId(FindIdRequestDto dto) {
 
-    FindIdGetResponseDto data = null;
+    FindIdPostResponseDto data = null;
 
     String userEmail = dto.getUserEmail();
     String userName = dto.getUserName();
@@ -106,7 +104,7 @@ public class AuthService {
 
       if (userEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_DATA);
 
-      data = new FindIdGetResponseDto(userEntity.getUserId());
+      data = new FindIdPostResponseDto(userEntity.getUserId());
 
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -115,30 +113,6 @@ public class AuthService {
     
     return ResponseDto.setSuccess("성공", data);
 
-  }
-
-  public ResponseDto<FindPasswordGetResponseDto> findPassword(FindPasswordRequestDto dto) {
-
-    FindPasswordGetResponseDto data = null;
-
-    String userId = dto.getUserId();
-    String userName = dto.getUserName();
-    String userEmail = dto.getUserEmail();
-
-    try {
-
-      UserEntity userEntity = userRepository.findByUserIdAndUserNameAndUserEmail(userId, userName, userEmail);
-    
-      if (userEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_DATA);
-
-      data = new FindPasswordGetResponseDto(userEntity.getUserPassword());
-
-    } catch (Exception exception) {
-      exception.printStackTrace();
-      return ResponseDto.setFailed(ResponseMessage.DATABASE_ERROR);
-    }
-    
-    return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
   }
 
   public ResponseDto<ResetPasswordPostResponseDto> resetPassword(resetPasswordPostRequestDto dto) {
@@ -170,9 +144,9 @@ public class AuthService {
     return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
   }
 
-  public ResponseDto<SignInGetResponseDto> signIn(SignInRequestDto dto) {
+  public ResponseDto<SignInPostResponseDto> signIn(SignInRequestDto dto) {
 
-    SignInGetResponseDto data = null;
+    SignInPostResponseDto data = null;
     UserEntity userEntity = null;
 
     String userId = dto.getUserId();
@@ -191,7 +165,7 @@ public class AuthService {
       String token = tokenProvider.create(userId);
       int exprTime = 3600000;
 
-      data = new SignInGetResponseDto(token, exprTime, userEntity);
+      data = new SignInPostResponseDto(token, exprTime, userEntity);
 
     } catch (Exception exception) {
       exception.printStackTrace();

@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FindIdGetResponseDto {
+public class FindIdPostResponseDto {
   
   private String userId;
 
-  public FindIdGetResponseDto(UserEntity userEntity) {
+  public FindIdPostResponseDto(UserEntity userEntity) {
 		this.userId = userEntity.getUserId();
 		
 	}
