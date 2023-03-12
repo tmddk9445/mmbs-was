@@ -146,7 +146,7 @@ public class OrderService {
 			orderEntity.setOrderGiftCode(orderGiftCode);
 			orderRepository.save(orderEntity);
 
-			data = new GiftPatchResponseDto();
+			data = new GiftPatchResponseDto(dto);
 
 		} catch (Exception exception) {
 			exception.printStackTrace();

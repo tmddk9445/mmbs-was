@@ -1,6 +1,6 @@
 package com.mong.mmbs.dto.response.order;
 
-import com.mong.mmbs.entity.GiftEntity;
+import com.mong.mmbs.dto.request.order.GiftPatchReqeustDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,16 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class GiftPatchResponseDto {
 
-    private int giftCode;
-    private String giftName;
-    private String giftImage;
+// 주문번호
+  private String orderNumber;
+//  사은품
+  private int orderGiftCode;
 
-    public GiftPatchResponseDto(GiftEntity giftEntity){
 
-		this.giftCode = giftEntity.getGiftCode();
-		this.giftName = giftEntity.getGiftName();
-		this.giftImage = giftEntity.getGiftImage();
-    
-	}
+  public GiftPatchResponseDto(GiftPatchReqeustDto dto) {
+
+    this.orderNumber = dto.getOrderNumber();
+    this.orderGiftCode = dto.getOrderGiftCode();
+
+  }
 
 }

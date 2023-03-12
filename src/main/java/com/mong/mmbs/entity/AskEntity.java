@@ -63,4 +63,5 @@ public class AskEntity {
 		this.askTitle = dto.getAskTitle();
 		this.askContent = dto.getAskContent();
 	}
+	
 }

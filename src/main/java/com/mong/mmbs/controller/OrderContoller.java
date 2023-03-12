@@ -31,9 +31,10 @@ public class OrderContoller {
   @Autowired OrderService orderService;
 
   public static final String ORDER_POST = "/"; 
-  public static final String ORDER_GET_LIST = "/list"; 
 
+  public static final String ORDER_GET_LIST = "/list"; 
   public static final String GIFT_GET_GIFTCODE = "/{giftCode}";
+	
 	public static final String GIFT_PATCH = "/gift";
   
   @PostMapping(ORDER_POST)

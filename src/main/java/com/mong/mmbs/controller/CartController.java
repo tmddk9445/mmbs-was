@@ -36,10 +36,9 @@ public class CartController {
     public static final String CART_GET = "/";
 
     public static final String CART_PATCH_AMOUNT = "/";
-    public static final String CART_PATCH_AMOUNT_ALL = "/all";
 
     public static final String CART_DELETE_CARTID = "/{cartId}";
-    public static final String CART_DELETE_CARTUSERID = "/{cartUserId}";
+    public static final String CART_DELETE_CARTUSERID = "/all/{cartUserId}";
 
 	@PostMapping(CART_POST)
 	public ResponseDto<CartPostResponseDto> post(@AuthenticationPrincipal String userId, @Valid @RequestBody CartPostRequestDto requestBody){

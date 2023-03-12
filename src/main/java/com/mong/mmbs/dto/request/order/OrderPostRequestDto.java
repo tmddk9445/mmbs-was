@@ -1,6 +1,7 @@
 package com.mong.mmbs.dto.request.order;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,9 +34,9 @@ public class OrderPostRequestDto {
 	private String orderShipAddressDetail;
 	private String orderShipMessage;
 
-	@NotBlank
+	@NotNull
 	private int productId;
-  @NotBlank
+  @NotNull
   private int orderCount;
 
 	public boolean getOrderUserWhether() {
