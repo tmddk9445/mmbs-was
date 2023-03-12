@@ -34,8 +34,8 @@ public class AskController {
   public static final String ASK_POST = "/";
 
   public static final String ASK_GET_LIST = "/list";
-  public static final String ASK_GET_ASKID = "/{askId}";
   public static final String ASK_GET_FIND = "/{askStatus}/{months}/{askSort}";
+  public static final String ASK_GET_ASKID = "/get/{askId}";
 
   public static final String ASK_PATCH = "/";
 
