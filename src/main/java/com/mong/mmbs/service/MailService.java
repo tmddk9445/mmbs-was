@@ -12,6 +12,7 @@ public class MailService {
   @Autowired JavaMailSender mailSender;
 
   public boolean sendPasswordEmail(String tmpPassword, String memberEmail) {
+    
     try {
 
       MailDto mailDto = new MailDto(tmpPassword, memberEmail);

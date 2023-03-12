@@ -31,10 +31,10 @@ public class OrderContoller {
   @Autowired OrderService orderService;
 
   public static final String ORDER_POST = "/"; 
-  public static final String ORDER_GET_LIST = "/"; 
+  public static final String ORDER_GET_LIST = "/list"; 
 
   public static final String GIFT_GET_GIFTCODE = "/{giftCode}";
-	public static final String GIFT_PATCH = "/";
+	public static final String GIFT_PATCH = "/gift";
   
   @PostMapping(ORDER_POST)
   public ResponseDto<OrderPostResponseDto> postOrder(@Valid @RequestBody OrderPostRequestDto requestBody){
@@ -42,7 +42,7 @@ public class OrderContoller {
     return result;
   }
 
-  @GetMapping(ORDER_GET_LIST) // OrderGetListResponseDto
+  @GetMapping(ORDER_GET_LIST)
 	public ResponseDto<List<OrderGetListResponseDto>> getOrderList(@AuthenticationPrincipal String userId) { 
 		ResponseDto<List<OrderGetListResponseDto>> result = orderService.getOrderList(userId);
 		return result;

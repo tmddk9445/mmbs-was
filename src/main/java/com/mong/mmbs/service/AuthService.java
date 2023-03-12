@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.mong.mmbs.common.constant.ResponseMessage;
 import com.mong.mmbs.common.util.UserUtil;
+import com.mong.mmbs.dto.request.auth.FindIdRequestDto;
+import com.mong.mmbs.dto.request.auth.FindPasswordRequestDto;
 import com.mong.mmbs.dto.request.auth.SendPasswordEmailRequestDto;
+import com.mong.mmbs.dto.request.auth.SignInRequestDto;
 import com.mong.mmbs.dto.request.auth.SignUpRequestDto;
 import com.mong.mmbs.dto.request.auth.resetPasswordPostRequestDto;
 import com.mong.mmbs.dto.response.ResponseDto;
@@ -90,9 +93,12 @@ public class AuthService {
 
   }
 
-  public ResponseDto<FindIdGetResponseDto> findId(String userEmail, String userName) {
+  public ResponseDto<FindIdGetResponseDto> findId(FindIdRequestDto dto) {
 
     FindIdGetResponseDto data = null;
+
+    String userEmail = dto.getUserEmail();
+    String userName = dto.getUserName();
 
     try {
 
@@ -111,9 +117,13 @@ public class AuthService {
 
   }
 
-  public ResponseDto<FindPasswordGetResponseDto> findPassword(String userId, String userName, String userEmail) {
+  public ResponseDto<FindPasswordGetResponseDto> findPassword(FindPasswordRequestDto dto) {
 
     FindPasswordGetResponseDto data = null;
+
+    String userId = dto.getUserId();
+    String userName = dto.getUserName();
+    String userEmail = dto.getUserEmail();
 
     try {
 
@@ -160,10 +170,13 @@ public class AuthService {
     return ResponseDto.setSuccess(ResponseMessage.SUCCESS, data);
   }
 
-  public ResponseDto<SignInGetResponseDto> signIn(String userId, String userPassword) {
+  public ResponseDto<SignInGetResponseDto> signIn(SignInRequestDto dto) {
 
     SignInGetResponseDto data = null;
     UserEntity userEntity = null;
+
+    String userId = dto.getUserId();
+    String userPassword = dto.getUserPassword();
 
     try {
 
