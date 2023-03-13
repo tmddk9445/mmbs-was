@@ -39,16 +39,14 @@ public class UserService {
 
   }
 
-  public ResponseDto<UserPatchResponseDto> patchUser(UserPatchRequestDto dto) {
+  public ResponseDto<UserPatchResponseDto> patchUser(String userId, UserPatchRequestDto dto) {
 
     UserPatchResponseDto data = null;
-    String userId = dto.getUserId();
 
     try {
 
       UserEntity userEntity = userRepository.findByUserId(userId);
-      if (userEntity == null)
-        return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_USER);
+      if (userEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_USER);
 
       userEntity.setPatchUser(dto);
       userRepository.save(userEntity);

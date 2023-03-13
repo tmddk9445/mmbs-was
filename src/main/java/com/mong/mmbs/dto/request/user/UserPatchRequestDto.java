@@ -2,26 +2,26 @@ package com.mong.mmbs.dto.request.user;
 
 import javax.validation.constraints.NotBlank;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class UserPatchRequestDto {
-	@NotBlank
-	private String userId;
-	@NotBlank
-	private String userName;
-	@NotBlank
-	private String userPhone;
-	@NotBlank
-	private String userEmail;
-	@NotBlank
+
+//	주소
+  @NotBlank
 	private String userAddress;
+//	상세 주소
 	@NotBlank
 	private String userAddressDetail;
+//	이름
+	@NotBlank
+	private String userName;
+//	전화번호
+	@NotBlank
+	private String userPhone;
+//	아이 생일
 	private String userKidBirth;
 
 }

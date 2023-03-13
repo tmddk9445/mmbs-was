@@ -37,8 +37,8 @@ public class UserController {
 	}
 
 	@PatchMapping(PATCH_USER_UPDATE)
-	public ResponseDto<UserPatchResponseDto> patchUser(@Valid @RequestBody UserPatchRequestDto dto) {
-		ResponseDto<UserPatchResponseDto> response = userService.patchUser(dto);
+	public ResponseDto<UserPatchResponseDto> patchUser(@AuthenticationPrincipal String userId, @Valid @RequestBody UserPatchRequestDto dto) {
+		ResponseDto<UserPatchResponseDto> response = userService.patchUser(userId, dto);
 		return response;
 	}
 	

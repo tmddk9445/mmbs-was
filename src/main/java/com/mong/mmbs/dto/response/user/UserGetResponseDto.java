@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserGetResponseDto {
 
+// 아이디
+	private String userId;
 //	주소
 	private String userAddress;
 //	상세 주소
@@ -21,13 +23,16 @@ public class UserGetResponseDto {
 	private String userPhone;
 //	아이 생일
 	private String userKidBirth;
+
   
   public UserGetResponseDto(UserEntity userEntity) {
 		
+		this.userId = userEntity.getUserId();
 		this.userAddress = userEntity.getUserAddress();
 		this.userAddressDetail =userEntity.getUserAddressDetail();
 		this.userName = userEntity.getUserName();
 		this.userPhone = userEntity.getUserPhone();
 		this.userKidBirth = userEntity.getUserKidBirth();
+		
 	}
 }
