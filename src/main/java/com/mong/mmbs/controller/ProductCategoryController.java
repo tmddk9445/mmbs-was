@@ -33,7 +33,7 @@ public class ProductCategoryController<BookListServicevice> {
 	@GetMapping(GET_PRODUCT_GENRE_LIST)
 	public ResponseDto<ProductGenreGetListResponseDto> getProductGenreList(@PathVariable("produtGenreCategory") String productGenreCategory, @PathVariable("productSubGenreCategory") String productSubGenreCategory) {
 		ResponseDto<ProductGenreGetListResponseDto> response
-		 = productCategoryService.getProductGenreList(productGenreCategory, productSubGenreCategory);
+			= productCategoryService.getProductGenreList(productGenreCategory, productSubGenreCategory);
 		return response;
 	}
 	
