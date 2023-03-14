@@ -29,7 +29,7 @@ public class ProductController {
     @Autowired ProductRepository productRepository;
 
     private static final String POST_PRODUCT_LIKE = "/productLike";
-    private static final String PRODUCT_GET_FIND = "/findProduct";
+    private static final String PRODUCT_GET_FIND = "/findProduct/{productTitle}";
     private static final String GET_BEST_SELLER = "/bestSeller";
     private static final String GET_RANDOM_PRODUCT = "/randomProduct";
     private static final String GET_PRODUCT_DETAIL_PRODUCTSEQ = "/productDetail/{productSeq}";

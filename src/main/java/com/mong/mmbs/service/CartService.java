@@ -107,7 +107,7 @@ public class CartService {
 			List<CartEntity> cartList = dto.getCartList();
 			cartRepository.saveAll(cartList);
 	
-			data = new CartAmountPatchResponseDto();
+			data = new CartAmountPatchResponseDto(cartList);
 
 		} catch (Exception exception) {
       exception.printStackTrace();
@@ -126,8 +126,9 @@ public class CartService {
 			CartEntity cartEntity = cartRepository.findByCartId(cartId);
 			if (cartEntity == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_CART);
 
-			List<CartEntity> cartList = cartRepository.findByCartUserId(userId);
+			cartRepository.delete(cartEntity);
 
+			List<CartEntity> cartList = cartRepository.findByCartUserId(userId);
       data = new CartDeleteResponseDto(cartList);
 
 		} catch (Exception exception) {
@@ -146,9 +147,11 @@ public class CartService {
 		try {
 
 			List<CartEntity> cartList = cartRepository.findByCartUserId(cartUserId);
-			if (cartList != null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_CART);
+			if (cartList == null) return ResponseDto.setFailed(ResponseMessage.NOT_EXIST_CART);
 
 			cartRepository.deleteAll(cartList);
+
+			cartList = cartRepository.findByCartUserId(cartUserId);
 
 			data = new CartDeleteAllResponseDto(cartList);
 

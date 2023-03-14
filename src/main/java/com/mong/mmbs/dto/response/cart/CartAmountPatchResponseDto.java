@@ -13,4 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CartAmountPatchResponseDto {
     List<CartEntity> cartList;
+
+    
 }
